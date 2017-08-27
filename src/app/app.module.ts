@@ -7,6 +7,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { ConfigStorageInterface } from './shared/config-storage.interface';
 import { ConfigLocalStorageService } from './shared/config-local-storage.service';
 import { LoggerService } from './shared/logger.service';
+import { InstallModule } from './install/install.module';
 
 @NgModule({
   declarations: [
@@ -15,6 +16,7 @@ import { LoggerService } from './shared/logger.service';
   imports: [
     BrowserModule,
     AppRoutingModule,
+    InstallModule,
     NotesModule
   ],
   providers: [
