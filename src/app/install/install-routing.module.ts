@@ -8,7 +8,7 @@ import { ConfigSyncGuardService } from './services/config-sync-guard.service';
 
 const routes: Routes = [
   {
-    path: 'install',
+    path: '',
     component: InstallComponent,
     children: [
       { path: 'step1-enable-sync', component: InstallEnableSyncComponent },

@@ -3,15 +3,15 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { InstallComponent } from './install.component';
-import { InstallRoutingModule } from './install-routing.module';
 import { InstallEnableSyncComponent } from './install-enable-sync/install-enable-sync.component';
 import { InstallConfigSyncComponent } from './install-config-sync/install-config-sync.component';
+import { InstallRoutingModule } from './install-routing.module';
 
 @NgModule({
   imports: [
     CommonModule,
-    ReactiveFormsModule,
-    InstallRoutingModule
+    InstallRoutingModule,
+    ReactiveFormsModule
   ],
   declarations: [
     InstallComponent,

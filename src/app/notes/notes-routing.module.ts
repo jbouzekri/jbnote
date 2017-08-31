@@ -9,7 +9,7 @@ import { NotesGuardService } from './services/notes-guard.service';
 
 const routes: Routes = [
   {
-    path: 'notes',
+    path: '',
     component: NotesComponent,
     canActivate: [NotesGuardService],
     children: [

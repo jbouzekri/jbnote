@@ -1,4 +1,4 @@
-import { Inject, Injectable, Optional } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { CanActivate, Router } from '@angular/router';
 import { ConfigStorageInterface } from '../../shared/config-storage.interface';
 import { LoggerService } from '../../shared/logger.service';
