@@ -1,3 +1,12 @@
 <p>
   note-list works!
 </p>
+
+<a [routerLink]="['new']">New note</a>
+
+<div *ngFor="let note of notes">
+  {{note|json}}
+</div>
+<div *ngIf="!notes?.length">
+  no note found
+</div>

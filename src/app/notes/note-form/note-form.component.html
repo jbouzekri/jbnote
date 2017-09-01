@@ -1,0 +1,35 @@
+<p>Form value: {{ noteForm.value | json }}</p>
+<p>Form status: {{ noteForm.status | json }}</p>
+
+<form [formGroup]="noteForm" (ngSubmit)="onSubmit()" novalidate>
+  <div class="form-group">
+    <label class="center-block">Title:
+      <input class="form-control" formControlName="title">
+
+      <div *ngIf="title.invalid && (title.dirty || title.touched)" class="alert alert-danger">
+        <div *ngIf="title.errors.required">
+          title is required.
+        </div>
+      </div>
+    </label>
+  </div>
+
+  <div class="form-group">
+    <label class="center-block">Body:
+      <textarea formControlName="body"></textarea>
+
+      <div *ngIf="body.invalid && (body.dirty || body.touched)" class="alert alert-danger">
+        <div *ngIf="body.errors.required">
+          title is required.
+        </div>
+      </div>
+    </label>
+  </div>
+
+  <div style="margin-bottom: 1em">
+    <button type="submit" [disabled]="noteForm.pristine || !noteForm.valid" class="btn btn-success">Save</button>
+    <button type="reset" (click)="noteForm.reset()" [disabled]="noteForm.pristine" class="btn btn-danger">Revert</button>
+  </div>
+</form>
+
+<a [routerLink]="['../']">Previous</a>
