@@ -51,9 +51,16 @@ export class NotesService {
     return Observable.fromPromise(listPromise);
   }
 
-  search() {
-    // TODO :
-    // - define search parameters
-    // - interact with search engine service
+  search(terms: string): Observable<Note[]> {
+    const searchPromise = this
+      .searchEngine
+      .search(terms)
+      .then(notes => {
+        return Promise.all(notes.map(searchRef => {
+          return this.db.get(searchRef.ref);
+        }));
+      });
+
+    return Observable.fromPromise(searchPromise);
   }
 }

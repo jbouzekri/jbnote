@@ -4,6 +4,7 @@ import * as lunr from 'lunr';
 
 import { LoggerService } from '../../../shared/logger.service';
 import { NotesEventBusService } from '../notes-event-bus.service';
+import { Note } from '../../models/note.model';
 
 
 @Injectable()
@@ -43,7 +44,9 @@ export class SearchEngineStorageService {
     });
   }
 
-  search(terms: string) {
-
+  search(terms: string): Promise<lunr.IIndexSearchResult[]> {
+    return new Promise(resolve => {
+      resolve(this.index.search(terms));
+    });
   }
 }
