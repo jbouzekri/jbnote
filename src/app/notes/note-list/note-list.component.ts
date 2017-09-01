@@ -15,9 +15,23 @@ export class NoteListComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.notesService.list().subscribe((notes) => {
+    this.loadList();
+  }
+
+  loadList() {
+    this.notesService.list().first().subscribe((notes) => {
       this.notes = notes;
     });
   }
 
+  deleteNote(note: Note) {
+    if (!confirm(`Are you sure you want to delete the note "${note.title}"`)) {
+      return;
+    }
+
+    this.notesService.delete(note).first().subscribe(() => {
+      // TODO : notification
+      this.loadList();
+    });
+  }
 }

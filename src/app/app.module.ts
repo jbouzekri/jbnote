@@ -2,6 +2,10 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { Router } from '@angular/router';
 
+// Global rxjs features
+import 'rxjs/add/observable/fromPromise';
+import 'rxjs/add/operator/first';
+
 import { environment } from '../environments/environment';
 
 import { AppComponent } from './app.component';

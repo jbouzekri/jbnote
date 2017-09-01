@@ -20,16 +20,15 @@
 
       <div *ngIf="body.invalid && (body.dirty || body.touched)" class="alert alert-danger">
         <div *ngIf="body.errors.required">
-          title is required.
+          body is required.
         </div>
       </div>
     </label>
   </div>
 
   <div style="margin-bottom: 1em">
-    <button type="submit" [disabled]="noteForm.pristine || !noteForm.valid" class="btn btn-success">Save</button>
-    <button type="reset" (click)="noteForm.reset()" [disabled]="noteForm.pristine" class="btn btn-danger">Revert</button>
+    <button type="submit" [disabled]="!noteForm.valid" class="btn btn-success">Save</button>
   </div>
 </form>
 
-<a [routerLink]="['../']">Previous</a>
+<a [routerLink]="['/notes']">Return to list</a>

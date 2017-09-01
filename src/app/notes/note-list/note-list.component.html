@@ -6,6 +6,9 @@
 
 <div *ngFor="let note of notes">
   {{note|json}}
+  <a [routerLink]="[note.id, 'edit']">Edit</a>
+  <a [routerLink]="[note.id]">View</a>
+  <a (click)="deleteNote(note)">Delete</a>
 </div>
 <div *ngIf="!notes?.length">
   no note found

@@ -26,22 +26,28 @@ export class NotesService {
     // - decide if we need a sync service
   }
 
-  save(note: Note, source: string = SOURCE_LOCAL) {
-    return this.db.save(note);
+  save(note: Note, source: string = SOURCE_LOCAL): Observable<Note> {
+    const savePromise = this.db.save(note);
+
+    return Observable.fromPromise(savePromise);
   }
 
   delete(note: Note, source: string = SOURCE_LOCAL) {
-    // TODO :
-    // - emit delete event
+    const deletePromise = this.db.delete(note);
+
+    return Observable.fromPromise(deletePromise);
   }
 
-  get(id: string) {
-    // TODO:
-    // - load a note from the indexeddb database
+  get(id: string): Observable<Note> {
+    const getPromise = this.db.get(id);
+
+    return Observable.fromPromise(getPromise);
   }
 
   list(page: number = 1, limit: number = 15): Observable<Note[]> {
-    return this.db.list(page, limit);
+    const listPromise = this.db.list(page, limit);
+
+    return Observable.fromPromise(listPromise);
   }
 
   search() {

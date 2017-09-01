@@ -5,7 +5,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { NoteListComponent } from './note-list/note-list.component';
 import { NoteDetailComponent } from './note-detail/note-detail.component';
 import { NoteFormComponent } from './note-form/note-form.component';
-import { NotesComponent } from './notes.component';
 import { NotesService } from './services/notes.service';
 import { NotesRoutingModule } from './notes-routing.module';
 import { IndexeddbStorageService } from './services/storage/indexeddb-storage.service';
@@ -19,8 +18,7 @@ import { IndexeddbStorageService } from './services/storage/indexeddb-storage.se
   declarations: [
     NoteListComponent,
     NoteDetailComponent,
-    NoteFormComponent,
-    NotesComponent
+    NoteFormComponent
   ],
   providers: [
     NotesService,

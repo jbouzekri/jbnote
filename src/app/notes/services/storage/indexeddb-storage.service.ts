@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/fromPromise';
 
 import { DB, UpgradeDB } from 'idb';
 
 import { LoggerService } from '../../../shared/logger.service';
 import { Note } from '../../models/note.model';
 import { v1 } from 'uuid';
+
+type NoteFormatter  = (note: Note) => Note|string;
+
 
 @Injectable()
 export class IndexeddbStorageService {
@@ -35,21 +36,19 @@ export class IndexeddbStorageService {
     }
   }
 
-  public get(id: string): Observable<Note> {
-    const getPromise: Promise<Note> = this.dbPromise.then((db: DB) => {
+  public get(id: string): Promise<Note> {
+    return this.dbPromise.then((db: DB) => {
       const tx = db.transaction(this.NOTE_STORE, 'readonly');
       const store = tx.objectStore(this.NOTE_STORE);
       return store.get(id);
     });
-
-    return Observable.fromPromise(getPromise);
   }
 
-  public list(page: number, limit: number): Observable<Note[]> {
+  public list(page: number, limit: number): Promise<Note[]> {
     const notesResult = [];
     let noteIndex = 0;
 
-    const listPromise = this.dbPromise.then((db: DB) => {
+    return this.dbPromise.then((db: DB) => {
       const tx = db.transaction([this.NOTE_STORE], 'readonly');
       const store = tx.objectStore(this.NOTE_STORE);
       const index = store.index('updatedAt');
@@ -64,8 +63,10 @@ export class IndexeddbStorageService {
     }).then(function() {
       return notesResult;
     });
+  }
 
-    return Observable.fromPromise(listPromise);
+  public delete(note: Note): Promise<Note> {
+    return this.persist(note, 'delete', (item: Note) => item.id);
   }
 
   protected add(note: Note): Promise<Note> {
@@ -82,11 +83,11 @@ export class IndexeddbStorageService {
     return this.persist(note, 'put');
   }
 
-  protected persist(note: Note, method: string = 'add') {
+  protected persist(note: Note, method: string = 'add', format: NoteFormatter = (item: Note) => item) {
     return this.dbPromise.then((db: DB) => {
       const tx = db.transaction(this.NOTE_STORE, 'readwrite');
       const store = tx.objectStore(this.NOTE_STORE);
-      store[method](note);
+      store[method](format(note));
       return tx.complete;
     }).then(function () {
       return note;
