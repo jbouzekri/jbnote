@@ -11,6 +11,8 @@ import 'rxjs/add/operator/switchMap';
 import { Note } from '../models/note.model';
 import { NotesService } from '../services/notes.service';
 import { LoggerService } from '../../shared/logger.service';
+import 'rxjs/add/operator/startWith';
+import 'rxjs/add/operator/take';
 
 @Component({
   selector: 'app-note-list',
@@ -23,6 +25,7 @@ export class NoteListComponent implements OnInit, OnDestroy {
   private subscription: Subscription;
   private searchTerms = new Subject<string>();
   private submitTerms = new Subject<string>();
+  private forceListReload = new Subject<void>();
 
   constructor(
     private logger: LoggerService,
@@ -30,34 +33,44 @@ export class NoteListComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.loadList().subscribe((notes) => {
-      this.notes = notes;
-    });
-
     this.subscription = this.createSearchObservable()
       .subscribe((notes) => {
         this.logger.info('Search results found', notes);
         this.notes = notes;
       });
+
+    this.searchTerms.next('');
   }
 
-  loadList(): Observable<Note[]> {
-    return this.notesService.list().first();
+  loadList() {
+    this.createLoadListObservable().subscribe((notes) => {
+      this.notes = notes;
+    });
   }
 
   createSearchObservable() {
-    return Observable.merge(
-      this.searchTerms.debounceTime(300),
+    const termObservables: Observable<string> = Observable.merge(
+      this
+        .searchTerms
+        .debounceTime(300),
       this.submitTerms
-    ).distinctUntilChanged()
+    ).distinctUntilChanged((x, y) => {
+      return x !== y || !y;
+    });
+
+    return termObservables
       .switchMap(term => term
-        ? this.notesService.search(term)
-        : this.loadList()
+          ? this.notesService.search(term)
+          : this.createLoadListObservable()
       ).catch(error => {
         // TODO: notification
         this.logger.error('Error when searching notes', error);
-        return this.loadList();
+        return this.createLoadListObservable();
       });
+  }
+
+  createLoadListObservable(): Observable<Note[]> {
+    return this.notesService.list().first();
   }
 
   search(event: KeyboardEvent, terms: string) {
@@ -75,11 +88,13 @@ export class NoteListComponent implements OnInit, OnDestroy {
 
     this.notesService.delete(note).first().subscribe(() => {
       // TODO : notification
-      this.loadList();
+      this.forceListReload.next();
     });
   }
 
   ngOnDestroy(): void {
-    this.subscription && this.subscription.unsubscribe();
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
   }
 }
