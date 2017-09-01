@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
 
+import { environment } from '../../environments/environment';
+
 
 @Injectable()
 export class LoggerService {
-  enabled = true;
+  enabled = !environment.production;
   noop = () => {};
 
   constructor() {
@@ -13,7 +15,7 @@ export class LoggerService {
   }
 
   get debug() {
-    if (this.enabled) {
+    if (this.enabled && environment.isDebug) {
       return console.debug.bind(console);
     }
     return this.noop;
@@ -34,7 +36,7 @@ export class LoggerService {
   }
 
   get info() {
-    if (this.enabled) {
+    if (this.enabled && environment.isInfo) {
       return console.info.bind(console);
     }
     return this.noop;

@@ -13,7 +13,8 @@
     ],
     "types":[
       "uuid",
-      "prismjs"
+      "prismjs",
+      "lunr"
     ],
     "lib": [
       "es2017",

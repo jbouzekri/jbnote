@@ -4,20 +4,21 @@ import { Note } from '../models/note.model';
 import { SOURCE_LOCAL } from '../models/note-event.model';
 import { IndexeddbStorageService } from './storage/indexeddb-storage.service';
 import { Observable } from 'rxjs/Observable';
+import { SearchEngineStorageService } from './storage/searchengine-storage.service';
 
 @Injectable()
 export class NotesService {
   constructor(
-    protected logger: LoggerService,
-    protected db: IndexeddbStorageService
+    private logger: LoggerService,
+    private db: IndexeddbStorageService,
+    private searchEngine: SearchEngineStorageService
   ) {
     this.logger.debug('NotesService instanciated');
+    this.init();
   }
 
-  init() {
-    // TODO :
-    // - trigger sync
-    // - load all indexed db to search engine
+  protected init() {
+    this.db.init();
   }
 
   sync() {

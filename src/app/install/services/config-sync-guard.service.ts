@@ -9,7 +9,9 @@ export class ConfigSyncGuardService implements CanActivate {
     protected router: Router,
     @Inject('ConfigStorageInterface') protected config: ConfigStorageInterface,
     protected logger: LoggerService
-  ) {}
+  ) {
+    this.logger.debug('ConfigSyncGuardService instanciated');
+  }
 
   canActivate() {
     return this.checkSyncEnabled();

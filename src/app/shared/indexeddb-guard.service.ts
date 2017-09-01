@@ -4,7 +4,7 @@ import { LoggerService } from './logger.service';
 
 @Injectable()
 export class IndexedDBGuard implements CanActivate, CanActivateChild {
-  constructor(protected router: Router, protected logger: LoggerService) {
+  constructor(private router: Router, private logger: LoggerService) {
     this.logger.debug('IndexedDBGuard instanciated');
   }
 

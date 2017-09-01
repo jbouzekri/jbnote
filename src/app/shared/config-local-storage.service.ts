@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ConfigStorageInterface } from './config-storage.interface';
+import { LoggerService } from './logger.service';
 
 const SYNC_ENABLED_KEY = 'app_sync_enabled';
 const SYNC_CONFIG_KEY = 'app_sync_config';
@@ -7,7 +8,8 @@ const SYNC_CONFIG_KEY = 'app_sync_config';
 @Injectable()
 export class ConfigLocalStorageService implements ConfigStorageInterface {
 
-  constructor() {
+  constructor(private logger: LoggerService) {
+    this.logger.debug('ConfigLocalStorageService instanciated');
     if (!localStorage) {
       throw Error('LocalStorage is not available');
     }

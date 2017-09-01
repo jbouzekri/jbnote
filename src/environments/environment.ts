@@ -4,5 +4,19 @@
 // The list of which env maps to which file can be found in `.angular-cli.json`.
 
 export const environment = {
-  production: false
+  production: false,
+
+  debugLevel: 2,
+
+  get isInfo() {
+    return this.debugLevel >= 1;
+  },
+
+  get isDebug() {
+    return this.debugLevel >= 2;
+  },
+
+  get isDetail() {
+    return this.debugLevel >= 3;
+  }
 };

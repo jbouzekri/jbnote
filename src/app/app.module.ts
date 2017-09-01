@@ -37,8 +37,8 @@ import { ErrorComponent } from './error/error.component';
 })
 export class AppModule {
   constructor(router: Router) {
-    // Diagnostic only: inspect router configuration
-    if (!environment.production) {
+    if (environment.isDetail) {
+      // Diagnostic only: inspect router configuration
       console.log('Routes: ', JSON.stringify(router.config, undefined, 2));
     }
   }
