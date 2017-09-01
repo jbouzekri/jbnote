@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
+import { MarkdownToHtmlModule } from 'ng2-markdown-to-html';
 
 import { NoteListComponent } from './note-list/note-list.component';
 import { NoteDetailComponent } from './note-detail/note-detail.component';
@@ -13,7 +14,8 @@ import { IndexeddbStorageService } from './services/storage/indexeddb-storage.se
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    NotesRoutingModule
+    NotesRoutingModule,
+    MarkdownToHtmlModule.forRoot()
   ],
   declarations: [
     NoteListComponent,

@@ -1,14 +1,19 @@
 <p>
   note-detail works!
 </p>
+
 <br />
-<ul *ngIf="note">
-  <li>id : {{ note.id }}</li>
-  <li>title : {{ note.title }}</li>
-  <li>body : {{ note.body }}</li>
-  <li>createdAt : {{ note.createdAt }}</li>
-  <li>updatedAt : {{ note.updatedAt }}</li>
-</ul>
+
+<div *ngIf="note">
+  <ul>
+    <li>id : {{ note.id }}</li>
+    <li>title : {{ note.title }}</li>
+    <li>createdAt : {{ note.createdAt }}</li>
+    <li>updatedAt : {{ note.updatedAt }}</li>
+  </ul>
+
+  <markdown-to-html [data]="note.body"></markdown-to-html>
+</div>
 
 <a *ngIf="note" [routerLink]="['edit']">Edit</a>
 <a *ngIf="note" (click)="deleteNote()">Delete</a>
