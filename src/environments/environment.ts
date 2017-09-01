@@ -4,8 +4,14 @@
 // The list of which env maps to which file can be found in `.angular-cli.json`.
 
 export const environment = {
+  // Enable production environment
   production: false,
 
+  // Configure logging level globally
+  // 3 : detail (everything even angular verbose routing debug)
+  // 2 : debug (for development purpose)
+  // 1 : info (error, warnings and info)
+  // 0 : error and warning only (default in production)
   debugLevel: 2,
 
   get isInfo() {

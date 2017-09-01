@@ -1,3 +1,10 @@
+/**
+ * Root module
+ *
+ * @module app/app.module
+ * @licence MIT 2017 https://github.com/jbouzekri/jbnote/blob/master/LICENSE
+ */
+
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { Router } from '@angular/router';
@@ -30,6 +37,7 @@ import { ErrorComponent } from './error/error.component';
   ],
   imports: [
     // Note : some modules are lazy loaded by loadChildren routes
+    // see `app-routing.module.ts` for more information
     BrowserModule,
     AppRoutingModule
   ],

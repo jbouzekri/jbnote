@@ -1,7 +1,16 @@
+/**
+ * Route guard to check if the installation process has been completed
+ *
+ * @module app/notes/services/notes-guard.service
+ * @licence MIT 2017 https://github.com/jbouzekri/jbnote/blob/master/LICENSE
+ */
+
 import { Inject, Injectable } from '@angular/core';
 import { CanActivate, Router } from '@angular/router';
+
 import { ConfigStorageInterface } from '../../shared/config-storage.interface';
 import { LoggerService } from '../../shared/logger.service';
+
 
 @Injectable()
 export class NotesGuardService implements CanActivate {
@@ -15,6 +24,13 @@ export class NotesGuardService implements CanActivate {
     return this.checkSyncConfig();
   }
 
+  /**
+   * Check if the installation process has been completed
+   * If yes, continues to the notes module list page
+   * If no, redirects to the step1 page in the install module
+   *
+   * @returns {boolean}
+   */
   checkSyncConfig() {
     // If sync was disabled or if it is enabled and configured
     if (this.config.isInstalled()) {

@@ -1,3 +1,11 @@
+/**
+ * Service to manipulate the notes stored in the local indexeddb db
+ * (this is the master source of all the data for the app)
+ *
+ * @module app/notes/services/firebase-storage.service
+ * @licence MIT 2017 https://github.com/jbouzekri/jbnote/blob/master/LICENSE
+ */
+
 import { Injectable } from '@angular/core';
 
 import { DB, UpgradeDB } from 'idb';
@@ -13,16 +21,29 @@ type NoteFormatter  = (note: Note) => Note|string;
 
 @Injectable()
 export class IndexeddbStorageService {
-  NOTE_STORE = 'notes';
+  NOTE_STORE = 'notes'; // Name of the store of notes in indexeddb
 
+  // Store the promise to access the db
   dbPromise: Promise<DB>;
 
+  /**
+   * On instanciation, open the db and connects to event bus to potentially
+   * updates the local db with events coming from other sources
+   *
+   * @param {LoggerService} logger
+   * @param {NotesEventBusService} eventBus
+   */
   constructor(protected logger: LoggerService, protected eventBus: NotesEventBusService) {
     this.logger.debug('IndexeddbStorageService instanciated');
     this.dbPromise = this.initDB();
     this.watchEvents();
   }
 
+  /**
+   * Opens the indexeddb
+   *
+   * @returns {Promise<DB>}
+   */
   protected initDB(): Promise<DB> {
     return idb.open('jbnote', 1, (upgradeDb: UpgradeDB) => {
       if (!upgradeDb.objectStoreNames.contains(this.NOTE_STORE)) {
@@ -32,6 +53,14 @@ export class IndexeddbStorageService {
     });
   }
 
+  /**
+   * Trigger a refresh for all remote db based on the local state
+   * of the database
+   * It loops over all stored notes and push a refresh event to the
+   * event bus
+   *
+   * @returns {Promise<void>}
+   */
   public init(): Promise<void> {
     return this.dbPromise.then((db: DB) => {
       const tx = db.transaction(this.NOTE_STORE, 'readonly');
@@ -46,6 +75,13 @@ export class IndexeddbStorageService {
     });
   }
 
+  /**
+   * Persist a note
+   * (intelligent enough to create a new or update an existing note)
+   *
+   * @param {Note} note
+   * @returns {Promise<Note>}
+   */
   public save(note: Note): Promise<Note> {
     if (!note.id) {
       return this.add(note);
@@ -54,6 +90,12 @@ export class IndexeddbStorageService {
     }
   }
 
+  /**
+   * Get a note by its id
+   *
+   * @param {string} id
+   * @returns {Promise<Note>}
+   */
   public get(id: string): Promise<Note> {
     return this.dbPromise.then((db: DB) => {
       const tx = db.transaction(this.NOTE_STORE, 'readonly');
@@ -62,6 +104,13 @@ export class IndexeddbStorageService {
     });
   }
 
+  /**
+   * List the note (paginated)
+   *
+   * @param {number} page
+   * @param {number} limit
+   * @returns {Promise<Note[]>}
+   */
   public list(page: number, limit: number): Promise<Note[]> {
     const notesResult = [];
     let noteIndex = 0;
@@ -83,7 +132,14 @@ export class IndexeddbStorageService {
     });
   }
 
-  public delete(note: Note): Promise<Note> {
+  /**
+   * Delete a note
+   * Note : publishes a delete event into the event bus
+   *
+   * @param {Note} note
+   * @returns {Promise<Note>}
+   */
+  public remove(note: Note): Promise<Note> {
     return this
       .persist(note, 'delete', (item: Note) => item.id)
       .then((persistedNote) => {
@@ -92,6 +148,16 @@ export class IndexeddbStorageService {
       });
   }
 
+  /**
+   * Add a new note in the local indexeddb
+   *
+   * Note :
+   * - prefer the use of the public save method
+   * - published a refresh event to the event bus for the new note
+   *
+   * @param {Note} note
+   * @returns {Promise<Note>}
+   */
   protected add(note: Note): Promise<Note> {
     note.id = v1();
     note.createdAt = new Date();
@@ -105,6 +171,16 @@ export class IndexeddbStorageService {
       });
   }
 
+  /**
+   * Update an existing note in the local indexeddb
+   *
+   * Note :
+   * - prefer the use of the public save method
+   * - published a refresh event to the event bus for the updated note
+   *
+   * @param {Note} note
+   * @returns {Promise<Note>}
+   */
   protected update(note: Note): Promise<Note> {
     note.updatedAt = new Date();
 
@@ -116,6 +192,15 @@ export class IndexeddbStorageService {
       });
   }
 
+  /**
+   * Method implementing interaction with the object store
+   * to add / update / delete a note
+   *
+   * @param {Note} note
+   * @param {string} method
+   * @param {NoteFormatter} format
+   * @returns {Promise<Note>}
+   */
   protected persist(note: Note, method: string = 'add', format: NoteFormatter = (item: Note) => item) {
     return this.dbPromise.then((db: DB) => {
       const tx = db.transaction(this.NOTE_STORE, 'readwrite');

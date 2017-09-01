@@ -1,3 +1,11 @@
+/**
+ * Notes module routing
+ * (child route)
+ *
+ * @module app/notes/notes-routing.module
+ * @licence MIT 2017 https://github.com/jbouzekri/jbnote/blob/master/LICENSE
+ */
+
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
@@ -6,6 +14,9 @@ import { NoteFormComponent } from './note-form/note-form.component';
 import { NoteDetailComponent } from './note-detail/note-detail.component';
 import { NotesGuardService } from './services/notes-guard.service';
 
+// All route are guard to check if the configuration process has been fully
+// completed
+// If no, we redirect to step1 page of the install module
 const routes: Routes = [
   {
     path: '',

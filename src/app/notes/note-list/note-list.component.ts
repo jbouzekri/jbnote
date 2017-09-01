@@ -1,4 +1,14 @@
+/**
+ * Component to display the list of notes
+ * It provides a single Subject that manage the update of the list based
+ * on the search field or an order to refresh the list
+ *
+ * @module app/notes/note-list/note-list.component
+ * @licence MIT 2017 https://github.com/jbouzekri/jbnote/blob/master/LICENSE
+ */
+
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormGroup } from '@angular/forms';
 
 import { Subject } from 'rxjs/Subject';
 import { Subscription } from 'rxjs/Subscription';
@@ -7,7 +17,6 @@ import { Observable } from 'rxjs/Observable';
 import { Note } from '../models/note.model';
 import { NotesService } from '../services/notes.service';
 import { LoggerService } from '../../shared/logger.service';
-import { FormGroup } from '@angular/forms';
 
 
 @Component({
@@ -16,17 +25,21 @@ import { FormGroup } from '@angular/forms';
   styleUrls: ['./note-list.component.css']
 })
 export class NoteListComponent implements OnInit, OnDestroy {
-  notes: Note[] = [];
+  notes: Note[] = []; // List of notes to display in the template
 
   // Useless formgroup to be able to have a form in the template
   // without importing FormModule as all other forms are made
   // with reactive forms
-  searchForm = new FormGroup({})
+  searchForm = new FormGroup({});
 
+  // Base observable subscription to update the list
   private subscription: Subscription;
 
+  // Subject triggered by a key event on the search field
   private searchTerms = new Subject<string>();
+  // Subject triggered by submitting the search form
   private submitTerms = new Subject<string>();
+  // Subject to force the refresh of the note list
   private forceListReload = new Subject<void>();
 
   constructor(
@@ -34,23 +47,33 @@ export class NoteListComponent implements OnInit, OnDestroy {
     private notesService: NotesService
   ) { }
 
+  /**
+   * On init, create the observable using all the previous subject and
+   * subscribes to it to update the list of notes
+   */
   ngOnInit() {
-    this.subscription = this.createSearchObservable()
+    // Subscribe to the list observable
+    this.subscription = this.createObservable()
       .subscribe((notes) => {
         this.logger.info('Search results found', notes);
         this.notes = notes;
       });
 
+    // Force a refresh of the list for initialization
     this.searchTerms.next('');
   }
 
-  loadList() {
-    this.createLoadListObservable().subscribe((notes) => {
-      this.notes = notes;
-    });
-  }
-
-  createSearchObservable() {
+  /**
+   * Create the observable that aggregate all the subjects in this
+   * component to update the list in all cases:
+   * - on force refresh
+   * - on keyup in search form
+   * - on search form submit
+   *
+   * @returns {Observable<Note[]>}
+   */
+  createObservable() {
+    // Merge subjects triggered when acting on search field
     const termObservables: Observable<string> = Observable.merge(
       this
         .searchTerms
@@ -58,14 +81,15 @@ export class NoteListComponent implements OnInit, OnDestroy {
       this.submitTerms
     ).distinctUntilChanged();
 
+    // Subject triggered on force reload
+    // It uses the latest the search term to trigger a search
     const reloadObservable: Observable<string> = this
       .forceListReload
-      .switchMap(() => termObservables.last().startWith(''))
-      .map(value => {
-        console.log(value);
-        return value;
-      });
+      .switchMap(() => termObservables.last().startWith(''));
 
+    // On a new search term, search form submit or force reload,
+    // it uses the last emitted search term to refresh the notes
+    // list in the template
     return Observable.merge(termObservables, reloadObservable)
       .map(term => {
         this.logger.debug(`search triggered with term : "${term}"`);
@@ -81,10 +105,23 @@ export class NoteListComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   * A new observable that returns a note list sorted
+   * by updated date desc limited to a few items
+   *
+   * @returns {Observable<Note[]>}
+   */
   createLoadListObservable(): Observable<Note[]> {
     return this.notesService.list().first();
   }
 
+  /**
+   * Triggers a search by pushing a term to the search rx
+   * subject
+   *
+   * @param {KeyboardEvent} event
+   * @param {string} terms
+   */
   search(event: KeyboardEvent, terms: string) {
     if (event.keyCode === 13) {
       this.submitTerms.next(terms);
@@ -93,12 +130,18 @@ export class NoteListComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Called when deleting a note. It deletes the note
+   * and force a reload of the list
+   *
+   * @param {Note} note
+   */
   deleteNote(note: Note) {
     if (!confirm(`Are you sure you want to delete the note "${note.title}"`)) {
       return;
     }
 
-    this.notesService.delete(note).first().subscribe(() => {
+    this.notesService.remove(note).first().subscribe(() => {
       // TODO : notification
       this.forceListReload.next();
     });

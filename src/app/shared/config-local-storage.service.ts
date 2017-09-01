@@ -1,9 +1,18 @@
+/**
+ * An implementation of the config store using LocalStorage
+ *
+ * @module app/shared/config-local-storage.service
+ * @licence MIT 2017 https://github.com/jbouzekri/jbnote/blob/master/LICENSE
+ */
+
 import { Injectable } from '@angular/core';
+
 import { ConfigStorageInterface } from './config-storage.interface';
 import { LoggerService } from './logger.service';
 
 const SYNC_ENABLED_KEY = 'app_sync_enabled';
 const SYNC_CONFIG_KEY = 'app_sync_config';
+
 
 @Injectable()
 export class ConfigLocalStorageService implements ConfigStorageInterface {
