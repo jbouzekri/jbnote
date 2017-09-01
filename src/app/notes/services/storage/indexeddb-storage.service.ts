@@ -40,7 +40,7 @@ export class IndexeddbStorageService {
     }).then(function logItems(cursor) {
       if (!cursor) { return; }
       this.eventBus.emit(new NoteEvent('db', 'refresh', cursor.value));
-      return cursor.continue().then(logItems);
+      return cursor.continue().then(logItems.bind(this));
     }.bind(this)).then(() => {
       return;
     });
@@ -97,13 +97,23 @@ export class IndexeddbStorageService {
     note.createdAt = new Date();
     note.updatedAt = new Date();
 
-    return this.persist(note, 'add');
+    return this
+      .persist(note, 'add')
+      .then((persistedNote) => {
+        this.eventBus.emit(new NoteEvent('db', 'refresh', persistedNote));
+        return persistedNote;
+      });
   }
 
   protected update(note: Note): Promise<Note> {
     note.updatedAt = new Date();
 
-    return this.persist(note, 'put');
+    return this
+      .persist(note, 'put')
+      .then((persistedNote) => {
+        this.eventBus.emit(new NoteEvent('db', 'refresh', persistedNote));
+        return persistedNote;
+      });
   }
 
   protected persist(note: Note, method: string = 'add', format: NoteFormatter = (item: Note) => item) {

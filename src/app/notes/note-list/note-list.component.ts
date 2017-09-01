@@ -3,16 +3,12 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
 import { Subscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/merge';
-import 'rxjs/add/operator/debounceTime';
-import 'rxjs/add/operator/distinctUntilChanged';
-import 'rxjs/add/operator/switchMap';
 
 import { Note } from '../models/note.model';
 import { NotesService } from '../services/notes.service';
 import { LoggerService } from '../../shared/logger.service';
-import 'rxjs/add/operator/startWith';
-import 'rxjs/add/operator/take';
+import { FormGroup } from '@angular/forms';
+
 
 @Component({
   selector: 'app-note-list',
@@ -22,7 +18,13 @@ import 'rxjs/add/operator/take';
 export class NoteListComponent implements OnInit, OnDestroy {
   notes: Note[] = [];
 
+  // Useless formgroup to be able to have a form in the template
+  // without importing FormModule as all other forms are made
+  // with reactive forms
+  searchForm = new FormGroup({})
+
   private subscription: Subscription;
+
   private searchTerms = new Subject<string>();
   private submitTerms = new Subject<string>();
   private forceListReload = new Subject<void>();
@@ -54,14 +56,24 @@ export class NoteListComponent implements OnInit, OnDestroy {
         .searchTerms
         .debounceTime(300),
       this.submitTerms
-    ).distinctUntilChanged((x, y) => {
-      return x !== y || !y;
-    });
+    ).distinctUntilChanged();
 
-    return termObservables
+    const reloadObservable: Observable<string> = this
+      .forceListReload
+      .switchMap(() => termObservables.last().startWith(''))
+      .map(value => {
+        console.log(value);
+        return value;
+      });
+
+    return Observable.merge(termObservables, reloadObservable)
+      .map(term => {
+        this.logger.debug(`search triggered with term : "${term}"`);
+        return term;
+      })
       .switchMap(term => term
-          ? this.notesService.search(term)
-          : this.createLoadListObservable()
+            ? this.notesService.search(term)
+            : this.createLoadListObservable()
       ).catch(error => {
         // TODO: notification
         this.logger.error('Error when searching notes', error);
