@@ -1,19 +1,21 @@
 /**
- * Service to manipulate the notes stored in the remote Firebase db
+ * Service passed to notesService if the user has chosen to deactivate
+ * remote syncing
  *
- * @module app/notes/services/firebase-storage.service
+ * @module app/notes/services/noremote-storage.service
  * @licence MIT 2017 https://github.com/jbouzekri/jbnote/blob/master/LICENSE
  */
 
 import { Injectable } from '@angular/core';
 
 import { LoggerService } from '../../../shared/logger.service';
-import { NotesEventBusService } from '../notes-event-bus.service';
 import { RemoteStorageService } from './remote-storage.service';
 import { ConfigStorageService } from '../../../shared/config-storage.service';
+import { NotesEventBusService } from '../notes-event-bus.service';
 
 @Injectable()
-export class FirebaseStorageService extends RemoteStorageService {
+export class NoRemoteStorageService extends RemoteStorageService {
+
   constructor(
     private config: ConfigStorageService,
     private eventBus: NotesEventBusService,
@@ -21,15 +23,10 @@ export class FirebaseStorageService extends RemoteStorageService {
   ) {
     super();
 
-    this.logger.debug('FirebaseStorageService instanced');
-    this.watchEvents();
+    this.logger.debug('NoRemoteStorageService instanced');
   }
 
   init() {
     return Promise.resolve();
-  }
-
-  watchEvents() {
-
   }
 }

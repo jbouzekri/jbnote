@@ -10,6 +10,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { NotesService } from '../services/notes.service';
 import { Note } from '../models/note.model';
+import { LoggerService } from '../../shared/logger.service';
 
 
 @Component({
@@ -23,8 +24,11 @@ export class NoteDetailComponent implements OnInit {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private notesService: NotesService
-  ) { }
+    private notesService: NotesService,
+    private logger: LoggerService
+  ) {
+    this.logger.debug('NoteDetailComponent instanced');
+  }
 
   /**
    * On init, load the note to display from the route param

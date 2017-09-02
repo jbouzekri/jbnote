@@ -22,7 +22,7 @@ export class NotesEventBusService {
   notes$ = this.notesSource.asObservable();
 
   constructor(private logger: LoggerService) {
-    this.logger.debug('NotesEventBusService instanciated');
+    this.logger.debug('NotesEventBusService instanced');
   }
 
   /**

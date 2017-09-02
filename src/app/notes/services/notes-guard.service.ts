@@ -8,16 +8,16 @@
 import { Inject, Injectable } from '@angular/core';
 import { CanActivate, Router } from '@angular/router';
 
-import { ConfigStorageInterface } from '../../shared/config-storage.interface';
+import { ConfigStorageService } from '../../shared/config-storage.service';
 import { LoggerService } from '../../shared/logger.service';
 
 
 @Injectable()
 export class NotesGuardService implements CanActivate {
   constructor(
-    protected router: Router,
-    @Inject('ConfigStorageInterface') protected config: ConfigStorageInterface,
-    protected logger: LoggerService
+    private router: Router,
+    private config: ConfigStorageService,
+    private logger: LoggerService
   ) {}
 
   canActivate() {

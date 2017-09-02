@@ -27,7 +27,7 @@ export class SearchEngineStorageService {
    * @param {NotesEventBusService} eventBus
    */
   constructor(private logger: LoggerService, private eventBus: NotesEventBusService) {
-    this.logger.debug('SearchEngineStorageService instanciated');
+    this.logger.debug('SearchEngineStorageService instanced');
     this.initIndex();
     this.watchEvents();
   }

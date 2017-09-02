@@ -6,21 +6,21 @@
  * @licence MIT 2017 https://github.com/jbouzekri/jbnote/blob/master/LICENSE
  */
 
-import { Inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 
 import { CanActivate, Router } from '@angular/router';
-import { ConfigStorageInterface } from '../../shared/config-storage.interface';
+import { ConfigStorageService } from '../../shared/config-storage.service';
 import { LoggerService } from '../../shared/logger.service';
 
 
 @Injectable()
 export class ConfigSyncGuardService implements CanActivate {
   constructor(
-    protected router: Router,
-    @Inject('ConfigStorageInterface') protected config: ConfigStorageInterface,
-    protected logger: LoggerService
+    private router: Router,
+    private config: ConfigStorageService,
+    private logger: LoggerService
   ) {
-    this.logger.debug('ConfigSyncGuardService instanciated');
+    this.logger.debug('ConfigSyncGuardService instanced');
   }
 
   canActivate() {

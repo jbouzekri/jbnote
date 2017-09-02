@@ -33,8 +33,8 @@ export class IndexeddbStorageService {
    * @param {LoggerService} logger
    * @param {NotesEventBusService} eventBus
    */
-  constructor(protected logger: LoggerService, protected eventBus: NotesEventBusService) {
-    this.logger.debug('IndexeddbStorageService instanciated');
+  constructor(private logger: LoggerService, private eventBus: NotesEventBusService) {
+    this.logger.debug('IndexeddbStorageService instanced');
     this.dbPromise = this.initDB();
     this.watchEvents();
   }

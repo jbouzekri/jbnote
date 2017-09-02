@@ -20,7 +20,20 @@ import { NotesRoutingModule } from './notes-routing.module';
 import { IndexeddbStorageService } from './services/storage/indexeddb-storage.service';
 import { SearchEngineStorageService } from './services/storage/searchengine-storage.service';
 import { NotesEventBusService } from './services/notes-event-bus.service';
+import { NotesComponent } from './notes.component';
+import { FirebaseStorageService } from './services/storage/firebase-storage.service';
+import { ConfigStorageService } from '../shared/config-storage.service';
+import { RemoteStorageService } from './services/storage/remote-storage.service';
+import { LoggerService } from '../shared/logger.service';
+import { NoRemoteStorageService } from './services/storage/no-remote-storage.service';
 
+export function provideRemoteStorageService(config: ConfigStorageService, eventBus, logger) {
+  if (config.isSyncEnabled()) {
+    return new FirebaseStorageService(config, eventBus, logger);
+  } else {
+    return new NoRemoteStorageService(config, eventBus, logger);
+  }
+}
 
 @NgModule({
   imports: [
@@ -32,13 +45,20 @@ import { NotesEventBusService } from './services/notes-event-bus.service';
   declarations: [
     NoteListComponent,
     NoteDetailComponent,
-    NoteFormComponent
+    NoteFormComponent,
+    NotesComponent
   ],
   providers: [
     NotesService,
     NotesEventBusService,
     IndexeddbStorageService,
-    SearchEngineStorageService
+    SearchEngineStorageService,
+    {
+      provide: RemoteStorageService,
+      useFactory: provideRemoteStorageService,
+      deps: [ConfigStorageService, NotesEventBusService, LoggerService]
+    },
+    FirebaseStorageService
   ]
 })
 export class NotesModule { }

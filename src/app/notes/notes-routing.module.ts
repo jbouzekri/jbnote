@@ -13,6 +13,7 @@ import { NoteListComponent } from './note-list/note-list.component';
 import { NoteFormComponent } from './note-form/note-form.component';
 import { NoteDetailComponent } from './note-detail/note-detail.component';
 import { NotesGuardService } from './services/notes-guard.service';
+import { NotesComponent } from './notes.component';
 
 // All route are guard to check if the configuration process has been fully
 // completed
@@ -21,6 +22,7 @@ const routes: Routes = [
   {
     path: '',
     canActivate: [NotesGuardService],
+    component: NotesComponent,
     children: [
       {
         path: 'new',

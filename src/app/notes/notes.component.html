@@ -1,0 +1,3 @@
+<div *ngIf="!appReady">Loading and syncing ...</div>
+<div>sync status : {{ fullSyncStatus }}</div>
+<router-outlet *ngIf="appReady"></router-outlet>

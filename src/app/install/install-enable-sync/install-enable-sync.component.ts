@@ -6,10 +6,10 @@
  * @licence MIT 2017 https://github.com/jbouzekri/jbnote/blob/master/LICENSE
  */
 
-import { Component, Inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { ConfigStorageInterface } from '../../shared/config-storage.interface';
+import { ConfigStorageService } from '../../shared/config-storage.service';
 import { InstallStepComponentInterface } from '../services/install-step-component.interface';
 
 
@@ -22,9 +22,9 @@ export class InstallEnableSyncComponent implements InstallStepComponentInterface
   step = 0; // 0% (first step) in installation process
 
   constructor(
-    protected router: Router,
-    protected route: ActivatedRoute,
-    @Inject('ConfigStorageInterface') protected config: ConfigStorageInterface) {
+    private router: Router,
+    private route: ActivatedRoute,
+    private config: ConfigStorageService) {
   }
 
   /**

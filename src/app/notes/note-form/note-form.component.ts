@@ -11,6 +11,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { NotesService } from '../services/notes.service';
+import { LoggerService } from '../../shared/logger.service';
 
 
 @Component({
@@ -23,11 +24,13 @@ export class NoteFormComponent implements OnInit {
   noteForm: FormGroup; // The form group to create / edit a note
 
   constructor(
+    private logger: LoggerService,
     private fb: FormBuilder,
     private notesService: NotesService,
     private router: Router,
     private route: ActivatedRoute,
   ) {
+    this.logger.debug('NoteFormComponent instanced');
     this.createForm();
   }
 

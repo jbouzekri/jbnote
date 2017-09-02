@@ -14,7 +14,7 @@ import { LoggerService } from './logger.service';
 @Injectable()
 export class IndexedDBGuard implements CanActivate {
   constructor(private router: Router, private logger: LoggerService) {
-    this.logger.debug('IndexedDBGuard instanciated');
+    this.logger.debug('IndexedDBGuard instanced');
   }
 
   canActivate() {

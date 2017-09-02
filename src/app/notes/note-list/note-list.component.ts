@@ -45,7 +45,9 @@ export class NoteListComponent implements OnInit, OnDestroy {
   constructor(
     private logger: LoggerService,
     private notesService: NotesService
-  ) { }
+  ) {
+    this.logger.debug('NoteListComponent instanced');
+  }
 
   /**
    * On init, create the observable using all the previous subject and

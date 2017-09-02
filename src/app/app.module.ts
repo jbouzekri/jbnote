@@ -23,7 +23,7 @@ import { environment } from '../environments/environment';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
-import { ConfigStorageInterface } from './shared/config-storage.interface';
+import { ConfigStorageService } from './shared/config-storage.service';
 import { ConfigLocalStorageService } from './shared/config-local-storage.service';
 import { LoggerService } from './shared/logger.service';
 import { IndexedDBGuard } from './shared/indexeddb-guard.service';
@@ -43,7 +43,7 @@ import { ErrorComponent } from './error/error.component';
   ],
   providers: [
     // Global because shared between modules
-    { provide: 'ConfigStorageInterface', useClass: ConfigLocalStorageService },
+    { provide: ConfigStorageService, useClass: ConfigLocalStorageService },
     LoggerService,
     IndexedDBGuard
   ],

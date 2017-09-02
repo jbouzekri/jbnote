@@ -5,12 +5,12 @@
  * @module app/install/install-config-sync/install-config-sync.component
  * @licence MIT 2017 https://github.com/jbouzekri/jbnote/blob/master/LICENSE
  */
-import { Component, Inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { InstallStepComponentInterface } from '../services/install-step-component.interface';
-import { ConfigStorageInterface } from '../../shared/config-storage.interface';
+import { ConfigStorageService } from '../../shared/config-storage.service';
 import { ConfigFirebase } from '../../shared/config-firebase.model';
 
 const FIREBASE_API_KEY_REGEX = /^[A-Za-z0-9_\-]+$/;
@@ -30,9 +30,9 @@ export class InstallConfigSyncComponent implements InstallStepComponentInterface
   configForm: FormGroup; // Firebase remote sync config reactive form group
 
   constructor(
-    protected fb: FormBuilder,
-    protected router: Router,
-    @Inject('ConfigStorageInterface') protected config: ConfigStorageInterface
+    private fb: FormBuilder,
+    private router: Router,
+    private config: ConfigStorageService
   ) {
     this.createForm();
   }
