@@ -18,6 +18,7 @@ import 'rxjs/add/operator/distinctUntilChanged';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/startWith';
 import 'rxjs/add/operator/last';
+import 'rxjs/add/operator/filter';
 
 import { environment } from '../environments/environment';
 

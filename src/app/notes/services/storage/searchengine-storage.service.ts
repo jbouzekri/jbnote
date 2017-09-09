@@ -11,6 +11,7 @@ import * as lunr from 'lunr';
 
 import { LoggerService } from '../../../shared/logger.service';
 import { NotesEventBusService } from '../notes-event-bus.service';
+import { NoteEvent } from '../../models/note-event.model';
 
 
 @Injectable()
@@ -51,14 +52,11 @@ export class SearchEngineStorageService {
    * the local app
    */
   protected watchEvents() {
-    this.eventBus.notes$.subscribe((noteEvent) => {
+    this.eventBus.notes$.filter((event: NoteEvent) => {
       // Search engine only process events from the DB.
       // DB is master in the relation
-      if (!noteEvent.fromDb) {
-        this.logger.debug('SearchEngineStorageService ignore event not from db', noteEvent);
-        return;
-      }
-
+      return event.fromDb;
+    }).subscribe((noteEvent: NoteEvent) => {
       this.logger.debug('SearchEngineStorageService process event', noteEvent);
       if (noteEvent.isDelete) {
         this.index.remove(noteEvent.data);

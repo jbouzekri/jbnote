@@ -12,9 +12,9 @@ export class Note {
 
   body: string;
 
-  createdAt: Date;
+  createdAt: number;
 
-  updatedAt: Date;
+  updatedAt: number;
 
-  tags: string[];
+  deletedAt: number;
 }

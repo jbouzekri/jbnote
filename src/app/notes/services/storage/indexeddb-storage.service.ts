@@ -84,7 +84,7 @@ export class IndexeddbStorageService {
    */
   public save(note: Note): Promise<Note> {
     if (!note.id) {
-      return this.add(note);
+      return this.create(note);
     } else {
       return this.update(note);
     }
@@ -140,6 +140,19 @@ export class IndexeddbStorageService {
    * @returns {Promise<Note>}
    */
   public remove(note: Note): Promise<Note> {
+    note.deletedAt = (new Date()).getTime();
+
+    return this.delete(note);
+  }
+
+  /**
+   * Delete a note
+   * Idempotent (don't change the note data)
+   *
+   * @param {Note} note
+   * @returns {Promise<Note>}
+   */
+  protected delete(note: Note): Promise<Note> {
     return this
       .persist(note, 'delete', (item: Note) => item.id)
       .then((persistedNote) => {
@@ -150,6 +163,7 @@ export class IndexeddbStorageService {
 
   /**
    * Add a new note in the local indexeddb
+   * Set note id, createdAt, updatedAt
    *
    * Note :
    * - prefer the use of the public save method
@@ -158,11 +172,22 @@ export class IndexeddbStorageService {
    * @param {Note} note
    * @returns {Promise<Note>}
    */
-  protected add(note: Note): Promise<Note> {
+  protected create(note: Note): Promise<Note> {
     note.id = v1();
-    note.createdAt = new Date();
-    note.updatedAt = new Date();
+    note.createdAt = (new Date()).getTime();
+    note.updatedAt = (new Date()).getTime();
 
+    return this.add(note);
+  }
+
+  /**
+   * Add a new note in the local indexeddb
+   * Idempotent (don't change the note data)
+   *
+   * @param {Note} note
+   * @returns {Promise<Note>}
+   */
+  protected add(note: Note): Promise<Note> {
     return this
       .persist(note, 'add')
       .then((persistedNote) => {
@@ -182,8 +207,19 @@ export class IndexeddbStorageService {
    * @returns {Promise<Note>}
    */
   protected update(note: Note): Promise<Note> {
-    note.updatedAt = new Date();
+    note.updatedAt = (new Date()).getTime();
 
+    return this.put(note);
+  }
+
+  /**
+   * Update an existing note in the local indexeddb
+   * Idempotent (don't change the note data)
+   *
+   * @param {Note} note
+   * @returns {Promise<Note>}
+   */
+  protected put(note: Note): Promise<Note> {
     return this
       .persist(note, 'put')
       .then((persistedNote) => {
@@ -213,6 +249,15 @@ export class IndexeddbStorageService {
   }
 
   protected watchEvents() {
-    this.eventBus.notes$.subscribe(() => {}); // TODO : handle event from event bus
+    this.eventBus.notes$
+      .filter((event: NoteEvent) => {
+        return !event.fromDb;
+      }).subscribe((event: NoteEvent) => {
+        // TODO : check if delete event or note is deleted on remote
+        //  Remove on local
+        // ELSE : load local compare updatedAt
+        //    if local is older, update it, else ignore it
+        console.log(event);
+      });
   }
 }

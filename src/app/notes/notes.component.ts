@@ -35,7 +35,7 @@ export class NotesComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.notesService.fullSync().then(() => this.appReady = true);
+    this.notesService.init().then(() => this.appReady = true);
   }
 
   ngOnDestroy() {

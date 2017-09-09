@@ -37,23 +37,19 @@ export class NotesService {
     this.logger.debug('NotesService instanced');
   }
 
-  fullSync() {
-    this.fullSyncSource.next('started');
-    return this.db.init().then(() => {
-      this.fullSyncSource.next('remote');
-      return this.remote.init();
-    }).then(() => {
-      this.fullSyncSource.next('finished');
+  init() {
+    return this.remote.init().then(() => {
+      return this.db.init();
     });
   }
 
-  save(note: Note, source: string = SOURCE_LOCAL): Observable<Note> {
+  save(note: Note): Observable<Note> {
     const savePromise = this.db.save(note);
 
     return Observable.fromPromise(savePromise);
   }
 
-  remove(note: Note, source: string = SOURCE_LOCAL) {
+  remove(note: Note) {
     const deletePromise = this.db.remove(note);
 
     return Observable.fromPromise(deletePromise);
