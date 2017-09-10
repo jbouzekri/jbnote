@@ -29,4 +29,6 @@ export class NoRemoteStorageService extends RemoteStorageService {
   init() {
     return Promise.resolve();
   }
+
+  destroy() {}
 }

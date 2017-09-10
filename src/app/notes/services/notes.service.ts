@@ -43,6 +43,10 @@ export class NotesService {
     });
   }
 
+  destroy() {
+    return this.remote.destroy();
+  }
+
   save(note: Note): Observable<Note> {
     const savePromise = this.db.save(note);
 

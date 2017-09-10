@@ -11,4 +11,6 @@
  */
 export abstract class RemoteStorageService {
   abstract init(): Promise<void>;
+
+  abstract destroy();
 }

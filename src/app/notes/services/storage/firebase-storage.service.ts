@@ -15,6 +15,7 @@ import { ConfigStorageService } from '../../../shared/config-storage.service';
 import { NoteEvent } from '../../models/note-event.model';
 import { Note } from '../../models/note.model';
 
+
 @Injectable()
 export class FirebaseStorageService extends RemoteStorageService {
   app: firebase.app.App;
@@ -39,63 +40,68 @@ export class FirebaseStorageService extends RemoteStorageService {
     }
 
     // Initialize Firebase
-    const config = {
+    const firebaseConf = this.config.getConfig();
+    this.app = firebase.initializeApp(firebaseConf);
 
-    };
-    this.app = firebase.initializeApp(config);
+    // Login if auth enabled
+    this.signIn(firebaseConf);
 
-    this.authPromise = this
-      .app
-      .auth()
-      .signInWithEmailAndPassword('falseemail', 'falsepassword');
-
+    // Watch remote events on child_added
     this.watchRemoteEvents();
 
     return Promise.resolve();
   }
 
-  watchRemoteEvents() {
-    this.authPromise.then(() => {
-      const notesRef = this.app.database().ref('/notes');
-      notesRef.on('child_added', (data: firebase.database.DataSnapshot) => {
-        this.eventBus.emit(new NoteEvent('firebase', 'refresh', data.val()));
-      });
-
-      notesRef.on('child_changed', (data: firebase.database.DataSnapshot) => {
-        this.eventBus.emit(new NoteEvent('firebase', 'refresh', data.val()));
-      });
-
-      notesRef.on('child_removed', (data: firebase.database.DataSnapshot) => {
-        this.eventBus.emit(new NoteEvent('firebase', 'delete', data.val()));
-      });
-    });
-  }
-
-  protected get(id) {
-    return this.authPromise.then(() => {
-      return this.app.database().ref('/notes/' + id).once('value');
-    }).then((snapshot: firebase.database.DataSnapshot) => {
-      return snapshot.val();
-    });
-  }
-
   protected watchEvents() {
-    if (!this.config.isSyncEnabled()) {
-      return;
-    }
-
     this.eventBus.notes$
       .filter((event: NoteEvent) => {
         return event.fromDb;
       }).subscribe((event: NoteEvent) => {
+        if (!this.config.isSyncEnabled()) {
+          return;
+        }
+
         this.logger.debug('FirebaseStorageService process event', event);
         this.remoteSync(event);
       });
   }
 
-  protected persist(note: Note) {
-    this.logger.debug('FirebaseStorageService persist', note);
-    return this.app.database().ref('/notes/' + note.id).set(note);
+  protected watchRemoteEvents() {
+    this.authPromise.then(() => {
+      const notesRef = this.app.database().ref('/notes');
+      notesRef.on('child_added', (data: firebase.database.DataSnapshot) => {
+        this.logger.debug('FirebaseStorageService child_added event', data.val());
+        this.eventBus.emit(new NoteEvent('firebase', 'refresh', data.val()));
+      });
+
+      notesRef.on('child_changed', (data: firebase.database.DataSnapshot) => {
+        this.logger.debug('FirebaseStorageService child_changed event', data.val());
+        this.eventBus.emit(new NoteEvent('firebase', 'refresh', data.val()));
+      });
+
+      notesRef.on('child_removed', (data: firebase.database.DataSnapshot) => {
+        this.logger.debug('FirebaseStorageService child_removed event', data.val());
+        this.eventBus.emit(new NoteEvent('firebase', 'delete', data.val()));
+      });
+    });
+  }
+
+  protected signIn(config) {
+    const authEnabled = config.enableAuth;
+    if (authEnabled) {
+      const username = config.username;
+      const password = config.password;
+      this.authPromise = this
+        .app
+        .auth()
+        .signInWithEmailAndPassword(username, password)
+        .catch(error => {
+          this.logger.error('error signing in firebase', error);
+          // TODO : sync state
+        });
+    } else {
+      this.authPromise = Promise.resolve();
+    }
   }
 
   protected remoteSync(event: NoteEvent) {
@@ -110,11 +116,27 @@ export class FirebaseStorageService extends RemoteStorageService {
       }
 
       return;
+    }).catch(error => {
+      this.logger.error('error remotesync in firebase', event, error);
+      // TODO : sync state
     });
   }
 
-  delete() {
-    if (this.authPromise) {
+  protected get(id) {
+    return this.authPromise.then(() => {
+      return this.app.database().ref('/notes/' + id).once('value');
+    }).then((snapshot: firebase.database.DataSnapshot) => {
+      return snapshot.val();
+    });
+  }
+
+  protected persist(note: Note) {
+    this.logger.debug('FirebaseStorageService persist', note);
+    return this.app.database().ref('/notes/' + note.id).set(note);
+  }
+
+  protected delete() {
+    if (this.authPromise instanceof firebase.Promise) {
       this.app.auth().signOut();
     }
 
@@ -124,5 +146,9 @@ export class FirebaseStorageService extends RemoteStorageService {
 
     this.app = undefined;
     this.authPromise = undefined;
+  }
+
+  destroy() {
+    this.delete();
   }
 }
