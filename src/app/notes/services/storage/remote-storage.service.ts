@@ -1,7 +1,7 @@
 /**
  * An interface for remote storage service
  *
- * @module app/notes/services/remote-storage.service
+ * @module app/notes/services/storage/remote-storage.service
  * @licence MIT 2017 https://github.com/jbouzekri/jbnote/blob/master/LICENSE
  */
 

@@ -2,7 +2,7 @@
  * Service passed to notesService if the user has chosen to deactivate
  * remote syncing
  *
- * @module app/notes/services/noremote-storage.service
+ * @module app/notes/services/storage/noremote-storage.service
  * @licence MIT 2017 https://github.com/jbouzekri/jbnote/blob/master/LICENSE
  */
 

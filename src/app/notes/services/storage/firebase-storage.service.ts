@@ -1,7 +1,7 @@
 /**
  * Service to manipulate the notes stored in the remote Firebase db
  *
- * @module app/notes/services/firebase-storage.service
+ * @module app/notes/services/storage/firebase-storage.service
  * @licence MIT 2017 https://github.com/jbouzekri/jbnote/blob/master/LICENSE
  */
 
@@ -18,9 +18,21 @@ import { Note } from '../../models/note.model';
 
 @Injectable()
 export class FirebaseStorageService extends RemoteStorageService {
-  app: firebase.app.App;
+
+  app: firebase.app.App; // The firebase app
+
+  // A promise used to be sure that all queries are done
+  // after authentication
   authPromise: firebase.Promise<any>;
 
+  /**
+   * On instantiation, connects to event bus to potentially
+   * updates the remote db with events coming from other sources
+   *
+   * @param {ConfigStorageService} config
+   * @param {NotesEventBusService} eventBus
+   * @param {LoggerService} logger
+   */
   constructor(
     private config: ConfigStorageService,
     private eventBus: NotesEventBusService,
@@ -33,10 +45,16 @@ export class FirebaseStorageService extends RemoteStorageService {
     this.watchEvents();
   }
 
+  /**
+   * Init the firebase app, authenticate if auth enabled
+   * and register listener to remote list events
+   *
+   * @returns {Promise<void>}
+   */
   init(): Promise<void> {
-    this.delete();
+    this.clear();
     if (!this.config.isSyncEnabled()) {
-      return;
+      return Promise.resolve();
     }
 
     // Initialize Firebase
@@ -52,10 +70,16 @@ export class FirebaseStorageService extends RemoteStorageService {
     return Promise.resolve();
   }
 
+  /**
+   * Register itself as a consumer from the note event bus
+   *
+   * Note : theorically, the only events it should process are the one from
+   * the db to update the remote database
+   */
   protected watchEvents() {
     this.eventBus.notes$
       .filter((event: NoteEvent) => {
-        return event.fromDb;
+        return !event.fromRemote && event.targetsRemote;
       }).subscribe((event: NoteEvent) => {
         if (!this.config.isSyncEnabled()) {
           return;
@@ -66,17 +90,25 @@ export class FirebaseStorageService extends RemoteStorageService {
       });
   }
 
+  /**
+   * Register events listener on remote db to push events to the note event bus
+   * if the remote is updated by another process
+   */
   protected watchRemoteEvents() {
     this.authPromise.then(() => {
       const notesRef = this.app.database().ref('/notes');
       notesRef.on('child_added', (data: firebase.database.DataSnapshot) => {
-        this.logger.debug('FirebaseStorageService child_added event', data.val());
-        this.eventBus.emit(new NoteEvent('firebase', 'refresh', data.val()));
+        const note = data.val();
+        const eventAction = (note.hasOwnProperty('deletedAt') && note.deletedAt) ? 'delete' : 'refresh';
+        this.logger.debug('FirebaseStorageService child_added event', note);
+        this.eventBus.emit(new NoteEvent('firebase', eventAction, note));
       });
 
       notesRef.on('child_changed', (data: firebase.database.DataSnapshot) => {
-        this.logger.debug('FirebaseStorageService child_changed event', data.val());
-        this.eventBus.emit(new NoteEvent('firebase', 'refresh', data.val()));
+        const note = data.val();
+        const eventAction = (note.hasOwnProperty('deletedAt') && note.deletedAt) ? 'delete' : 'refresh';
+        this.logger.debug('FirebaseStorageService child_changed event', note);
+        this.eventBus.emit(new NoteEvent('firebase', eventAction, note));
       });
 
       notesRef.on('child_removed', (data: firebase.database.DataSnapshot) => {
@@ -86,14 +118,22 @@ export class FirebaseStorageService extends RemoteStorageService {
     });
   }
 
+  /**
+   * If remote auth is enabled in configuration
+   * use email and password firebase auth to authenticate
+   *
+   * Note : always use the authPromise in future requests to
+   * be sure they occur after authentication
+   *
+   * @param config
+   */
   protected signIn(config) {
     const authEnabled = config.enableAuth;
     if (authEnabled) {
       const username = config.username;
       const password = config.password;
-      this.authPromise = this
-        .app
-        .auth()
+
+      this.authPromise = this.app.auth()
         .signInWithEmailAndPassword(username, password)
         .catch(error => {
           this.logger.error('error signing in firebase', error);
@@ -104,9 +144,19 @@ export class FirebaseStorageService extends RemoteStorageService {
     }
   }
 
+  /**
+   * Update remote note from a note event
+   *
+   * @param {NoteEvent} event
+   * @returns {firebase.Thenable<any>}
+   */
   protected remoteSync(event: NoteEvent) {
     const note = event.data;
     return this.get(note.id).then(remoteData => {
+      // We update remote if :
+      //   - note not found on remote
+      //   - or event is a deletion and the deletedAt field is not set on remote
+      //   - or if the remote update date is behind the local one
       const remotePush = !remoteData ||
         (event.isDelete && (!remoteData.hasOwnProperty('deletedAt') || !remoteData.deletedAt)) ||
         (!remoteData.hasOwnProperty('updatedAt') || remoteData.updatedAt < note.updatedAt);
@@ -122,20 +172,35 @@ export class FirebaseStorageService extends RemoteStorageService {
     });
   }
 
-  protected get(id) {
+  /**
+   * Get a note from remote by its id
+   *
+   * @param {string} id
+   * @returns {firebase.Promise<Note>}
+   */
+  protected get(id: string) {
     return this.authPromise.then(() => {
       return this.app.database().ref('/notes/' + id).once('value');
     }).then((snapshot: firebase.database.DataSnapshot) => {
-      return snapshot.val();
+      return <Note>snapshot.val();
     });
   }
 
+  /**
+   * Save a note in the remote database
+   *
+   * @param {Note} note
+   * @returns {firebase.Promise<any>}
+   */
   protected persist(note: Note) {
     this.logger.debug('FirebaseStorageService persist', note);
     return this.app.database().ref('/notes/' + note.id).set(note);
   }
 
-  protected delete() {
+  /**
+   * Clear the firebase app
+   */
+  protected clear() {
     if (this.authPromise instanceof firebase.Promise) {
       this.app.auth().signOut();
     }
@@ -148,7 +213,13 @@ export class FirebaseStorageService extends RemoteStorageService {
     this.authPromise = undefined;
   }
 
+  /**
+   * Called when moving outside the Notes module
+   * to be sure that next time we enter this module
+   * the call to init recreates a new firebase app
+   * with the possibly updated configuration
+   */
   destroy() {
-    this.delete();
+    this.clear();
   }
 }

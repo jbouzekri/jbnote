@@ -6,14 +6,13 @@
  * @licence MIT 2017 https://github.com/jbouzekri/jbnote/blob/master/LICENSE
  */
 
-import { Inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 
 import { LoggerService } from '../../shared/logger.service';
 import { Note } from '../models/note.model';
-import { SOURCE_LOCAL } from '../models/note-event.model';
 import { IndexeddbStorageService } from './storage/indexeddb-storage.service';
 import { SearchEngineStorageService } from './storage/searchengine-storage.service';
 import { RemoteStorageService } from './storage/remote-storage.service';

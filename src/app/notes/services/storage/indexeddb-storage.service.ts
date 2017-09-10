@@ -2,7 +2,7 @@
  * Service to manipulate the notes stored in the local indexeddb db
  * (this is the master source of all the data for the app)
  *
- * @module app/notes/services/firebase-storage.service
+ * @module app/notes/services/storage/firebase-storage.service
  * @licence MIT 2017 https://github.com/jbouzekri/jbnote/blob/master/LICENSE
  */
 
@@ -27,7 +27,7 @@ export class IndexeddbStorageService {
   dbPromise: Promise<DB>;
 
   /**
-   * On instanciation, open the db and connects to event bus to potentially
+   * On instantiation, open the db and connects to event bus to potentially
    * updates the local db with events coming from other sources
    *
    * @param {LoggerService} logger
@@ -51,6 +51,22 @@ export class IndexeddbStorageService {
         noteStore.createIndex('updatedAt', 'updatedAt', {unique: false});
       }
     });
+  }
+
+  /**
+   * Register itself as a consumer from the note event bus
+   *
+   * Note : theorically, the only events it should process are the one from
+   * the remote (firebase) to update its local database
+   */
+  protected watchEvents() {
+    this.eventBus.notes$
+      .filter((event: NoteEvent) => {
+        return !event.fromDb && event.targetsDb;
+      }).subscribe((event: NoteEvent) => {
+        this.logger.debug('IndexeddbStorageService process event', event);
+        this.localSync(event);
+      });
   }
 
   /**
@@ -137,26 +153,31 @@ export class IndexeddbStorageService {
    * Note : publishes a delete event into the event bus
    *
    * @param {Note} note
+   * @param {boolean} indexOnly
    * @returns {Promise<Note>}
    */
-  public remove(note: Note): Promise<Note> {
+  public remove(note: Note, indexOnly = false): Promise<Note> {
     note.deletedAt = (new Date()).getTime();
 
-    return this.delete(note);
+    return this.clear(note, indexOnly);
   }
 
   /**
    * Delete a note
    * Idempotent (don't change the note data)
    *
+   * Note : named clear instead of delete because of reserved word
+   *
    * @param {Note} note
+   * @param {boolean} indexOnly
    * @returns {Promise<Note>}
    */
-  protected delete(note: Note): Promise<Note> {
+  protected clear(note: Note, indexOnly = false): Promise<Note> {
     return this
       .persist(note, 'delete', (item: Note) => item.id)
       .then((persistedNote) => {
-        this.eventBus.emit(new NoteEvent('db', 'delete', persistedNote));
+        const eventTarget = indexOnly ? 'searchengine' : null;
+        this.eventBus.emit(new NoteEvent('db', 'delete', persistedNote, eventTarget));
         return persistedNote;
       });
   }
@@ -170,14 +191,15 @@ export class IndexeddbStorageService {
    * - published a refresh event to the event bus for the new note
    *
    * @param {Note} note
+   * @param {boolean} indexOnly
    * @returns {Promise<Note>}
    */
-  protected create(note: Note): Promise<Note> {
+  protected create(note: Note, indexOnly = false): Promise<Note> {
     note.id = v1();
     note.createdAt = (new Date()).getTime();
     note.updatedAt = (new Date()).getTime();
 
-    return this.add(note);
+    return this.add(note, indexOnly);
   }
 
   /**
@@ -185,13 +207,15 @@ export class IndexeddbStorageService {
    * Idempotent (don't change the note data)
    *
    * @param {Note} note
+   * @param {boolean} indexOnly
    * @returns {Promise<Note>}
    */
-  protected add(note: Note): Promise<Note> {
+  protected add(note: Note, indexOnly = false): Promise<Note> {
     return this
       .persist(note, 'add')
       .then((persistedNote) => {
-        this.eventBus.emit(new NoteEvent('db', 'refresh', persistedNote));
+        const eventTarget = indexOnly ? 'searchengine' : null;
+        this.eventBus.emit(new NoteEvent('db', 'refresh', persistedNote, eventTarget));
         return persistedNote;
       });
   }
@@ -204,12 +228,13 @@ export class IndexeddbStorageService {
    * - published a refresh event to the event bus for the updated note
    *
    * @param {Note} note
+   * @param {boolean} indexOnly
    * @returns {Promise<Note>}
    */
-  protected update(note: Note): Promise<Note> {
+  protected update(note: Note, indexOnly = false): Promise<Note> {
     note.updatedAt = (new Date()).getTime();
 
-    return this.put(note);
+    return this.put(note, indexOnly);
   }
 
   /**
@@ -217,13 +242,15 @@ export class IndexeddbStorageService {
    * Idempotent (don't change the note data)
    *
    * @param {Note} note
+   * @param {boolean} indexOnly
    * @returns {Promise<Note>}
    */
-  protected put(note: Note): Promise<Note> {
+  protected put(note: Note, indexOnly = false): Promise<Note> {
     return this
       .persist(note, 'put')
       .then((persistedNote) => {
-        this.eventBus.emit(new NoteEvent('db', 'refresh', persistedNote));
+        const eventTarget = indexOnly ? 'searchengine' : null;
+        this.eventBus.emit(new NoteEvent('db', 'refresh', persistedNote, eventTarget));
         return persistedNote;
       });
   }
@@ -248,16 +275,25 @@ export class IndexeddbStorageService {
     });
   }
 
-  protected watchEvents() {
-    this.eventBus.notes$
-      .filter((event: NoteEvent) => {
-        return !event.fromDb;
-      }).subscribe((event: NoteEvent) => {
-        // TODO : check if delete event or note is deleted on remote
-        //  Remove on local
-        // ELSE : load local compare updatedAt
-        //    if local is older, update it, else ignore it
-        console.log(event);
+  /**
+   * Called to synchronize a local note from a remote event
+   *
+   * @param {NoteEvent} event
+   */
+  protected localSync(event: NoteEvent) {
+    const remoteNote = event.data;
+    let localAction;
+    if (event.isDelete || (remoteNote.hasOwnProperty('deletedAt') && remoteNote.deletedAt)) {
+      localAction = this.clear(remoteNote, true);
+    } else {
+      localAction = this.get(remoteNote.id).then(localNote => {
+        if (localNote.updatedAt < remoteNote.updatedAt) {
+          return this.put(remoteNote, true);
+        }
       });
+    }
+    localAction.catch(error => {
+      this.logger.error('IndexeddbStorageService local sync error', event, error);
+    });
   }
 }

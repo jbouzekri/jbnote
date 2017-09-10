@@ -1,7 +1,7 @@
 /**
  * Service to manipulate the notes stored in the local search engine
  *
- * @module app/notes/services/searchengine-storage.service
+ * @module app/notes/services/storage/searchengine-storage.service
  * @licence MIT 2017 https://github.com/jbouzekri/jbnote/blob/master/LICENSE
  */
 
@@ -55,7 +55,7 @@ export class SearchEngineStorageService {
     this.eventBus.notes$.filter((event: NoteEvent) => {
       // Search engine only process events from the DB.
       // DB is master in the relation
-      return event.fromDb;
+      return event.fromDb && event.targetsSearchEngine;
     }).subscribe((noteEvent: NoteEvent) => {
       this.logger.debug('SearchEngineStorageService process event', noteEvent);
       if (noteEvent.isDelete) {
