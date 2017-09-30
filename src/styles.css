@@ -1,1 +1,10 @@
 /* You can add global styles to this file, and also import other style files */
+
+/* Normalize - reset browser css */
+@import '~normalize.css/normalize.css';
+
+/* Material icon */
+@import '~material-design-icons/iconfont/material-icons.css';
+
+/* Default Material theme for now */
+@import "~@angular/material/prebuilt-themes/deeppurple-amber.css";
