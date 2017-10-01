@@ -30,7 +30,7 @@ import { ConfigLocalStorageService } from './shared/config-local-storage.service
 import { LoggerService } from './shared/logger.service';
 import { IndexedDBGuard } from './shared/indexeddb-guard.service';
 import { ErrorComponent } from './error/error.component';
-import { AppMaterialModule } from './app-material.module';
+import { SharedModule } from './shared/shared.module';
 import { HeaderComponent } from './header/header.component';
 
 
@@ -45,7 +45,7 @@ import { HeaderComponent } from './header/header.component';
     // see `app-routing.module.ts` for more information
     BrowserModule,
     BrowserAnimationsModule,
-    AppMaterialModule,
+    SharedModule,
     AppRoutingModule
   ],
   providers: [

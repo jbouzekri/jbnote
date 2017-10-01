@@ -1,0 +1,29 @@
+.page-header {
+  padding-left: 20px;
+  background: #673ab7;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.page-header h1 {
+  font-weight: 300;
+  margin: 0;
+  padding: 28px 8px;
+  font-size: 20px;
+  color: rgba(255, 255, 255, 0.87);
+}
+
+
+.text-row {
+  margin-bottom: 4em;
+}
+
+.button-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}

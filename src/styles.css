@@ -8,3 +8,17 @@
 
 /* Default Material theme for now */
 @import "~@angular/material/prebuilt-themes/deeppurple-amber.css";
+
+body {
+  font-family: Roboto,Helvetica Neue Light,Helvetica Neue,Helvetica,Arial,Lucida Grande,sans-serif;
+  background: #fafafa;
+}
+
+.mat-stepper-horizontal {
+  background: #fafafa;
+}
+
+app-header {
+  position: relative;
+  z-index: 10;
+}
