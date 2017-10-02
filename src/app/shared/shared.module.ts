@@ -12,6 +12,7 @@ import {
   MatCardModule,
   MatSidenavModule
 } from '@angular/material';
+import { MarkdownToHtmlModule } from 'ng2-markdown-to-html';
 
 @NgModule({
   imports: [
@@ -25,7 +26,8 @@ import {
     MatInputModule,
     MatSlideToggleModule,
     MatCardModule,
-    MatSidenavModule
+    MatSidenavModule,
+    MarkdownToHtmlModule.forRoot()
   ],
   exports: [
     CommonModule,
@@ -38,7 +40,8 @@ import {
     MatInputModule,
     MatSlideToggleModule,
     MatCardModule,
-    MatSidenavModule
+    MatSidenavModule,
+    MarkdownToHtmlModule
   ],
 })
 export class SharedModule { }

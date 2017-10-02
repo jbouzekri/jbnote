@@ -33,6 +33,7 @@
 
 .app-form > * {
   width: 100%;
+  margin-bottom: 1em;
 }
 
 .app-form--install {

@@ -40,3 +40,7 @@ app-header {
 .mat-stepper-horizontal {
   background: #fafafa;
 }
+
+.responsive-img {
+  max-width: 100%;
+}

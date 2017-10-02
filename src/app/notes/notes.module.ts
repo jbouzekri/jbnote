@@ -26,6 +26,7 @@ import { ConfigStorageService } from '../shared/config-storage.service';
 import { RemoteStorageService } from './services/storage/remote-storage.service';
 import { LoggerService } from '../shared/logger.service';
 import { NoRemoteStorageService } from './services/storage/no-remote-storage.service';
+import { SharedModule } from '../shared/shared.module';
 
 export function provideRemoteStorageService(config: ConfigStorageService, eventBus, logger) {
   if (config.isSyncEnabled()) {
@@ -37,10 +38,8 @@ export function provideRemoteStorageService(config: ConfigStorageService, eventB
 
 @NgModule({
   imports: [
-    CommonModule,
-    ReactiveFormsModule,
     NotesRoutingModule,
-    MarkdownToHtmlModule.forRoot()
+    SharedModule
   ],
   declarations: [
     NoteListComponent,
