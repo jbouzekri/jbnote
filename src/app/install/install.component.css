@@ -17,7 +17,6 @@
   color: rgba(255, 255, 255, 0.87);
 }
 
-
 .text-row {
   margin-bottom: 4em;
 }
@@ -26,4 +25,40 @@
   display: flex;
   align-items: center;
   justify-content: space-around;
+}
+
+.app-form {
+  width: 100%;
+}
+
+.app-form > * {
+  width: 100%;
+}
+
+.app-form--install {
+  min-width: 150px;
+  max-width: 500px;
+  margin: auto;
+}
+
+.app-form-buttons {
+  margin-top: 1em;
+}
+
+.app-form-buttons--right {
+  float: right;
+}
+
+#open-help {
+  position: fixed;
+  bottom: 3em;
+  right: 3em;
+}
+
+mat-sidenav-container {
+  flex: 1;
+}
+
+mat-sidenav {
+  width: 50%;
 }

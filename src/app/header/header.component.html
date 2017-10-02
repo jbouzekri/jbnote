@@ -1,21 +1,21 @@
-<md-toolbar color="primary" class="mat-elevation-z6">
-  <a md-button routerLink="/" class="app-button">
-    <md-icon>bookmark_border</md-icon>
+<mat-toolbar color="primary" class="mat-elevation-z6">
+  <a mat-button routerLink="/" class="app-button">
+    <mat-icon>bookmark_border</mat-icon>
     <span>jbNote</span>
   </a>
 
   <!-- This fills the remaining space of the current row -->
   <span class="spacer"></span>
 
-  <button md-icon-button routerLink="/install" *ngIf="syncEnabled && syncConfigured">
-    <md-icon>sync</md-icon> Sync configuration error
+  <button mat-icon-button routerLink="/install" *ngIf="syncEnabled && syncConfigured">
+    <mat-icon>sync</mat-icon> Sync configuration error
   </button>
 
-  <button md-icon-button routerLink="/install/step2-config-sync" *ngIf="syncEnabled && !syncConfigured">
-    <md-icon>sync_problem</md-icon> Sync configuration error
+  <button mat-icon-button routerLink="/install/step2-config-sync" *ngIf="syncEnabled && !syncConfigured">
+    <mat-icon>sync_problem</mat-icon> Sync configuration error
   </button>
 
-  <button md-icon-button routerLink="/install" *ngIf="!syncEnabled">
-    <md-icon>sync_disabled</md-icon>
+  <button mat-icon-button routerLink="/install" *ngIf="!syncEnabled">
+    <mat-icon>sync_disabled</mat-icon>
   </button>
-</md-toolbar>
+</mat-toolbar>
