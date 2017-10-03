@@ -12,7 +12,9 @@ export class HeaderComponent implements OnInit {
   syncEnabled: boolean;
   syncConfigured: boolean;
 
-  constructor(private logger: LoggerService) {
+  constructor(
+    private logger: LoggerService
+  ) {
     this.logger.debug('HeaderComponent instanced');
   }
 

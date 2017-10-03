@@ -1,0 +1,10 @@
+<div class="text-row">
+  <p>Do you want to enable sync between devices ?</p>
+  <p>You will need a Google account with the Firebase service enabled (the free plan is good enough for this app).</p>
+  <small>(You can enable synchronization later)</small>
+</div>
+
+<div class="button-row">
+  <button type="button" mat-raised-button color="primary" (click)="changeSyncStatus(true)">Yes I want to !</button>
+  <button type="button" mat-raised-button color="warn" (click)="changeSyncStatus(false)">No I don't want to !</button>
+</div>

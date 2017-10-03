@@ -44,3 +44,14 @@ app-header {
 .responsive-img {
   max-width: 100%;
 }
+
+
+.text-row {
+  margin-bottom: 4em;
+}
+
+.button-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}

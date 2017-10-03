@@ -1,0 +1,85 @@
+<form [formGroup]="configForm" (ngSubmit)="onSubmit()" novalidate class="app-form app-form--install">
+  <!-- apikey field -->
+  <mat-form-field>
+    <input matInput placeholder="apiKey" [formControl]="apiKey">
+    <mat-hint align="start">apiKey is an alphanumerical string with dashes or underscores</mat-hint>
+    <mat-error *ngIf="apiKey.hasError('pattern')">
+      Please enter a valid apiKey
+    </mat-error>
+    <mat-error *ngIf="apiKey.hasError('required')">
+      apiKey is <strong>required</strong>
+    </mat-error>
+  </mat-form-field>
+  <!-- /apikey field -->
+
+  <!-- authDomain field -->
+  <mat-form-field>
+    <input matInput placeholder="authDomain" [formControl]="authDomain">
+    <mat-hint align="start">authDomain follows this format : <strong>somekey-98712.firebaseapp.com</strong></mat-hint>
+    <mat-error *ngIf="authDomain.hasError('pattern')">
+      Please enter a valid authDomain
+    </mat-error>
+    <mat-error *ngIf="authDomain.hasError('required')">
+      authDomain is <strong>required</strong>
+    </mat-error>
+  </mat-form-field>
+  <!-- /authDomain field -->
+
+  <!-- databaseURL field -->
+  <mat-form-field>
+    <input matInput placeholder="databaseURL" [formControl]="databaseURL">
+    <mat-hint align="start">databaseURL follows this format : <strong>https://somekey-87641.firebaseio.com</strong></mat-hint>
+    <mat-error *ngIf="databaseURL.hasError('pattern')">
+      Please enter a valid databaseURL
+    </mat-error>
+    <mat-error *ngIf="databaseURL.hasError('required')">
+      databaseURL is <strong>required</strong>
+    </mat-error>
+  </mat-form-field>
+  <!-- /databaseURL field -->
+
+  <!-- storageBucket field -->
+  <mat-form-field style="margin-bottom: 1em;">
+    <input matInput placeholder="storageBucket" [formControl]="storageBucket">
+    <mat-hint align="start">storageBucket follows this format : <strong>somekey-03257.appspot.com</strong></mat-hint>
+    <mat-error *ngIf="storageBucket.hasError('pattern')">
+      Please enter a valid storageBucket
+    </mat-error>
+    <mat-error *ngIf="storageBucket.hasError('required')">
+      storageBucket is <strong>required</strong>
+    </mat-error>
+  </mat-form-field>
+  <!-- /storageBucket field -->
+
+  <!-- enableAuth field -->
+  <mat-slide-toggle [formControl]="enableAuth" color="primary">
+    Enable Firebase user auth
+  </mat-slide-toggle>
+  <!-- /enableAuth field -->
+
+  <!-- username field -->
+  <mat-form-field *ngIf="enableAuth.value">
+    <input matInput placeholder="Username" [formControl]="username">
+    <mat-hint align="start">A username for the Email/Password provider with read/write access</mat-hint>
+    <mat-error *ngIf="username.hasError('required')">
+      username is <strong>required</strong>
+    </mat-error>
+  </mat-form-field>
+  <!-- /username field -->
+
+  <!-- password field -->
+  <mat-form-field *ngIf="enableAuth.value">
+    <input matInput placeholder="Password" [formControl]="password">
+    <mat-hint align="start">The password of the user</mat-hint>
+    <mat-error *ngIf="password.hasError('required')">
+      password is <strong>required</strong>
+    </mat-error>
+  </mat-form-field>
+  <!-- /password field -->
+
+  <div class="app-form-buttons">
+    <button mat-raised-button color="primary" type="submit" [disabled]="!configForm.valid">Save</button>
+    <button mat-raised-button color="accent" type="reset" (click)="configForm.reset()">Reset</button>
+    <button mat-raised-button type="button" (click)="cancel.emit()" class="app-form-buttons--right">Back</button>
+  </div>
+</form>

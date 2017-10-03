@@ -7,10 +7,14 @@
  */
 
 import { NgModule } from '@angular/core';
+
 import { SharedModule } from '../shared/shared.module';
+import { InstallRoutingModule } from './install-routing.module';
 
 import { InstallComponent } from './install.component';
-import { InstallRoutingModule } from './install-routing.module';
+import { ConfigTutorialComponent } from './config-tutorial/config-tutorial.component';
+import { EnableSyncComponent } from './enable-sync/enable-sync.component';
+import { ConfigSyncComponent } from './config-sync/config-sync.component';
 
 
 @NgModule({
@@ -19,7 +23,10 @@ import { InstallRoutingModule } from './install-routing.module';
     SharedModule
   ],
   declarations: [
-    InstallComponent
+    InstallComponent,
+    ConfigTutorialComponent,
+    EnableSyncComponent,
+    ConfigSyncComponent
   ]
 })
 export class InstallModule { }
