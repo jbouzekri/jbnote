@@ -10,7 +10,8 @@ import {
   MatInputModule,
   MatSlideToggleModule,
   MatCardModule,
-  MatSidenavModule
+  MatSidenavModule,
+  MatExpansionModule
 } from '@angular/material';
 import { MarkdownToHtmlModule } from 'ng2-markdown-to-html';
 
@@ -27,6 +28,7 @@ import { MarkdownToHtmlModule } from 'ng2-markdown-to-html';
     MatSlideToggleModule,
     MatCardModule,
     MatSidenavModule,
+    MatExpansionModule,
     MarkdownToHtmlModule.forRoot()
   ],
   exports: [
@@ -41,6 +43,7 @@ import { MarkdownToHtmlModule } from 'ng2-markdown-to-html';
     MatSlideToggleModule,
     MatCardModule,
     MatSidenavModule,
+    MatExpansionModule,
     MarkdownToHtmlModule
   ],
 })

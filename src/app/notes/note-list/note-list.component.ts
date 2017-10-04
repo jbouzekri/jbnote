@@ -25,6 +25,7 @@ import { LoggerService } from '../../shared/logger.service';
   styleUrls: ['./note-list.component.css']
 })
 export class NoteListComponent implements OnInit, OnDestroy {
+  selectedIndex = null; // Currently selected note in material expansion component
   notes: Note[] = []; // List of notes to display in the template
 
   // Useless formgroup to be able to have a form in the template
@@ -147,6 +148,15 @@ export class NoteListComponent implements OnInit, OnDestroy {
       // TODO : notification
       this.forceListReload.next();
     });
+  }
+
+  /**
+   * Triggered on click on an accordion item with a note
+   *
+   * @param {number} index
+   */
+  setIndex(index: number) {
+    this.selectedIndex = index;
   }
 
   ngOnDestroy(): void {

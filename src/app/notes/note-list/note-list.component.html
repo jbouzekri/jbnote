@@ -1,21 +1,40 @@
-<p>
-  note-list works!
-</p>
-
-<a [routerLink]="['new']">New note</a>
-
-<div>
+<mat-card>
   <form [formGroup]="searchForm" (submit)="search({keyCode: 13}, searchBox.value)">
-    <input type="search" #searchBox id="search-box" (input)="search($event, searchBox.value)" />
-    <button type="submit">Search</button>
+    <mat-form-field>
+      <input type="search" id="search-box" matInput #searchBox (input)="search($event, searchBox.value)" placeholder="Search" />
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
   </form>
+</mat-card>
+
+<div class="list-wrapper">
+
+  <a mat-raised-button color="primary" [routerLink]="['new']">New</a>
+
+  <mat-accordion>
+    <mat-expansion-panel *ngFor="let note of notes; let panelIndex = index" [expanded]="selectedIndex === panelIndex" (opened)="setIndex(panelIndex)" hideToggle="true">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          {{ note.title }}
+        </mat-panel-title>
+        <mat-panel-description>
+          {{ note.updatedAt }}
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+
+      <markdown-to-html [data]="note.body"></markdown-to-html>
+
+      <mat-action-row>
+        <a mat-raised-button color="accent" [routerLink]="[note.id, 'edit']">Edit</a>
+        <a mat-raised-button color="primary" [routerLink]="[note.id]">View</a>
+        <a mat-raised-button color="warn" (click)="deleteNote(note)">Delete</a>
+      </mat-action-row>
+    </mat-expansion-panel>
+  </mat-accordion>
+
+  <div *ngIf="!notes?.length">
+    <p>No note found</p>
+  </div>
 </div>
-<div *ngFor="let note of notes">
-  {{note|json}}
-  <a [routerLink]="[note.id, 'edit']">Edit</a>
-  <a [routerLink]="[note.id]">View</a>
-  <a (click)="deleteNote(note)">Delete</a>
-</div>
-<div *ngIf="!notes?.length">
-  no note found
-</div>
+
+

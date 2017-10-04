@@ -1,0 +1,11 @@
+form {
+  text-align: center;
+}
+
+form mat-form-field {
+  width: 50%;
+}
+
+.list-wrapper {
+  padding: 30px;
+}
