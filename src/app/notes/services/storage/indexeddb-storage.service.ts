@@ -287,7 +287,9 @@ export class IndexeddbStorageService {
       localAction = this.clear(remoteNote, true);
     } else {
       localAction = this.get(remoteNote.id).then(localNote => {
-        if (localNote.updatedAt < remoteNote.updatedAt) {
+        if (!localNote) {
+          return this.add(remoteNote, true);
+        } else if (localNote.updatedAt < remoteNote.updatedAt) {
           return this.put(remoteNote, true);
         }
       });
