@@ -18,7 +18,7 @@
           {{ note.title }}
         </mat-panel-title>
         <mat-panel-description>
-          {{ note.updatedAt }}
+          {{ note.updatedAt|date:'medium' }}
         </mat-panel-description>
       </mat-expansion-panel-header>
 
