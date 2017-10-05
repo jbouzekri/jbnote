@@ -55,3 +55,8 @@ app-header {
   align-items: center;
   justify-content: space-around;
 }
+
+.mat-content {
+  align-items: center;
+}
+

@@ -20,15 +20,26 @@
         <mat-panel-description>
           {{ note.updatedAt|date:'medium' }}
         </mat-panel-description>
+        <button mat-icon-button [matMenuTriggerFor]="menu" (click)="$event.stopPropagation()">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item [disabled]="selectedIndex === panelIndex" (click)="setIndex(panelIndex)">
+            <mat-icon>subject</mat-icon>
+            <span>View</span>
+          </button>
+          <button mat-menu-item [routerLink]="[note.id, 'edit']">
+            <mat-icon>create</mat-icon>
+            <span>Edit</span>
+          </button>
+          <button mat-menu-item (click)="deleteNote(note)">
+            <mat-icon>delete</mat-icon>
+            <span>Delete</span>
+          </button>
+        </mat-menu>
       </mat-expansion-panel-header>
 
       <markdown-to-html [data]="note.body"></markdown-to-html>
-
-      <mat-action-row>
-        <a mat-raised-button color="accent" [routerLink]="[note.id, 'edit']">Edit</a>
-        <a mat-raised-button color="primary" [routerLink]="[note.id]">View</a>
-        <a mat-raised-button color="warn" (click)="deleteNote(note)">Delete</a>
-      </mat-action-row>
     </mat-expansion-panel>
   </mat-accordion>
 
