@@ -1,36 +1,65 @@
-<p>Form value: {{ noteForm.value | json }}</p>
-<p>Form status: {{ noteForm.status | json }}</p>
+<div class="content-wrapper">
 
-<form [formGroup]="noteForm" (ngSubmit)="onSubmit()" novalidate>
-  <div class="form-group">
-    <label class="center-block">Title:
-      <input class="form-control" formControlName="title">
+  <mat-tab-group (selectedTabChange)="onSelectedTabChange()">
 
-      <div *ngIf="title.invalid && (title.dirty || title.touched)" class="alert alert-danger">
-        <div *ngIf="title.errors.required">
-          title is required.
-        </div>
-      </div>
-    </label>
-  </div>
+    <!-- edit tab -->
+    <mat-tab label="{{ noteForm.value.id ? 'Edit' : 'New' }}">
+      <mat-card>
+        <form [formGroup]="noteForm" (ngSubmit)="onSubmit()" novalidate class="app-form">
+          <!-- title field -->
+          <mat-form-field>
+            <input matInput placeholder="title" [formControl]="title">
+            <mat-error *ngIf="title.hasError('required')">
+              title is <strong>required</strong>
+            </mat-error>
+          </mat-form-field>
+          <!-- /title field -->
 
-  <div class="form-group">
-    <label class="center-block">Body:
-      <textarea formControlName="body"></textarea>
+          <!-- body field -->
+          <mat-form-field>
+            <textarea #bodyField autosize matInput placeholder="body" [formControl]="body"></textarea>
+            <mat-hint>This field supports markdown with code snippets</mat-hint>
+            <mat-error *ngIf="body.hasError('required')">
+              Body is <strong>required</strong>
+            </mat-error>
+          </mat-form-field>
+          <!-- /body field -->
 
-      <div *ngIf="body.invalid && (body.dirty || body.touched)" class="alert alert-danger">
-        <div *ngIf="body.errors.required">
-          body is required.
-        </div>
-      </div>
-    </label>
-  </div>
+          <button mat-raised-button color="primary" type="submit" [disabled]="!noteForm.valid" class="btn btn-success">
+            Save
+          </button>
+        </form>
+      </mat-card>
+    </mat-tab>
+    <!-- /edit tab -->
 
-  <div style="margin-bottom: 1em">
-    <button type="submit" [disabled]="!noteForm.valid" class="btn btn-success">Save</button>
-  </div>
-</form>
+    <!-- preview tab -->
+    <mat-tab label="Preview">
+      <mat-expansion-panel [expanded]="true" [hideToggle]="true">
+        <mat-expansion-panel-header style="height: 64px;">
+          <mat-panel-title>
+            {{ title.value }}
+          </mat-panel-title>
+          <mat-panel-description>
+            {{ now|date:'medium' }}
+          </mat-panel-description>
+          <button mat-icon-button disabled>
+            <mat-icon>more_vert</mat-icon>
+          </button>
+        </mat-expansion-panel-header>
 
-<markdown-to-html [data]="body.value"></markdown-to-html>
+        <markdown-to-html [data]="body.value"></markdown-to-html>
+      </mat-expansion-panel>
+    </mat-tab>
+    <!-- /preview tab -->
 
-<a [routerLink]="['/notes']">Return to list</a>
+  </mat-tab-group>
+
+  <a mat-button [routerLink]="['/notes']">
+    <mat-icon>keyboard_arrow_left</mat-icon> Back
+  </a>
+</div>
+
+
+
+

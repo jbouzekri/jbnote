@@ -7,10 +7,8 @@
  */
 
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
 
-import { MarkdownToHtmlModule } from 'ng2-markdown-to-html';
+import { Autosize } from 'ng-autosize';
 
 import { NoteListComponent } from './note-list/note-list.component';
 import { NoteDetailComponent } from './note-detail/note-detail.component';
@@ -45,7 +43,8 @@ export function provideRemoteStorageService(config: ConfigStorageService, eventB
     NoteListComponent,
     NoteDetailComponent,
     NoteFormComponent,
-    NotesComponent
+    NotesComponent,
+    Autosize
   ],
   providers: [
     NotesService,

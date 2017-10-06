@@ -6,13 +6,11 @@
  * @licence MIT 2017 https://github.com/jbouzekri/jbnote/blob/master/LICENSE
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { NotesService } from '../services/notes.service';
-import { LoggerService } from '../../shared/logger.service';
-
+import * as Prism from 'prismjs';
 
 @Component({
   selector: 'app-note-form',
@@ -22,6 +20,11 @@ import { LoggerService } from '../../shared/logger.service';
 export class NoteFormComponent implements OnInit {
 
   noteForm: FormGroup; // The form group to create / edit a note
+
+  now: Date = new Date(); // Display updated date in preview
+
+  @ViewChild('bodyField')
+  bodyField: ElementRef;
 
   constructor(
     private logger: LoggerService,
@@ -56,12 +59,26 @@ export class NoteFormComponent implements OnInit {
         // TODO : notification
         return this.router.navigate((['../']));
       }
+
       this.noteForm.setValue(note);
+      this.adjustBodyField();
     });
   }
 
   /**
-   * Instanciate the form group to edit / create a note
+   * Trigger an autosize of the textarea body field.
+   * Used to resize after the form is hydrated asynchronously.
+   */
+  protected adjustBodyField() {
+    const event = new Event('input', {
+      'bubbles': true,
+      'cancelable': true
+    });
+    this.bodyField.nativeElement.dispatchEvent(event);
+  }
+
+  /**
+   * Instantiate the form group to edit / create a note
    */
   createForm() {
     this.noteForm = this.fb.group({
@@ -83,9 +100,21 @@ export class NoteFormComponent implements OnInit {
     });
   }
 
+  /**
+   * Called when we switch tab
+   * Used to refresh PrismJs style on code snippets in preview tab.
+   */
+  onSelectedTabChange() {
+    Prism.highlightAll(false);
+  }
+
   // Helper to access the form title field in the template
   get title() { return this.noteForm.get('title'); }
 
   // Helper to access the form body field in the template
   get body() { return this.noteForm.get('body'); }
 }
+import { NotesService } from '../services/notes.service';
+
+
+import { LoggerService } from '../../shared/logger.service';

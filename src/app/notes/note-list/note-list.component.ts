@@ -99,8 +99,8 @@ export class NoteListComponent implements OnInit, OnDestroy {
         return term;
       })
       .switchMap(term => term
-            ? this.notesService.search(term)
-            : this.createLoadListObservable()
+        ? this.notesService.search(term)
+        : this.createLoadListObservable()
       ).catch(error => {
         // TODO: notification
         this.logger.error('Error when searching notes', error);
@@ -159,6 +159,9 @@ export class NoteListComponent implements OnInit, OnDestroy {
     this.selectedIndex = index;
   }
 
+  /**
+   * OnDestroy : unsubscribe all streams
+   */
   ngOnDestroy(): void {
     if (this.subscription) {
       this.subscription.unsubscribe();

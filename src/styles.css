@@ -41,10 +41,26 @@ app-header {
   background: #fafafa;
 }
 
+.content-wrapper {
+  padding: 24px;
+}
+
+.content-wrapper .mat-tab-header {
+  margin-bottom: 24px;
+}
+
 .responsive-img {
   max-width: 100%;
 }
 
+.app-form {
+  width: 100%;
+}
+
+.app-form > *:not(button) {
+  width: 100%;
+  margin-bottom: 1em;
+}
 
 .text-row {
   margin-bottom: 4em;

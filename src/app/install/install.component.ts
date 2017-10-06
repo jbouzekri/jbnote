@@ -9,7 +9,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormControl } from '@angular/forms';
-import { MdStepper } from '@angular/material';
+import { MatStepper } from '@angular/material';
 
 import { LoggerService } from '../shared/logger.service';
 
@@ -27,7 +27,7 @@ export class InstallComponent {
   configSyncFormControl: FormControl; // FormControl for config sync md-step
 
   @ViewChild('stepper')
-  stepper: MdStepper; // Reference to stepper to trigger navigation from code
+  stepper: MatStepper; // Reference to stepper to trigger navigation from code
 
   constructor(
     private router: Router,
