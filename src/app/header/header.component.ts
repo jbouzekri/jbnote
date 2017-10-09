@@ -11,6 +11,7 @@ import { LoggerService } from '../shared/logger.service';
 export class HeaderComponent implements OnInit {
   syncEnabled: boolean;
   syncConfigured: boolean;
+  syncError: boolean = false;
 
   constructor(
     private logger: LoggerService

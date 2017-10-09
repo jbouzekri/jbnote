@@ -13,7 +13,8 @@ import {
   MatSidenavModule,
   MatExpansionModule,
   MatMenuModule,
-  MatTabsModule
+  MatTabsModule,
+  MatTooltipModule
 } from '@angular/material';
 import { MarkdownToHtmlModule } from 'ng2-markdown-to-html';
 
@@ -33,6 +34,7 @@ import { MarkdownToHtmlModule } from 'ng2-markdown-to-html';
     MatExpansionModule,
     MatMenuModule,
     MatTabsModule,
+    MatTooltipModule,
     MarkdownToHtmlModule.forRoot()
   ],
   exports: [
@@ -50,6 +52,7 @@ import { MarkdownToHtmlModule } from 'ng2-markdown-to-html';
     MatExpansionModule,
     MatMenuModule,
     MatTabsModule,
+    MatTooltipModule,
     MarkdownToHtmlModule
   ],
 })

@@ -7,15 +7,21 @@
   <!-- This fills the remaining space of the current row -->
   <span class="spacer"></span>
 
-  <button mat-icon-button routerLink="/install" *ngIf="syncEnabled && syncConfigured">
-    <mat-icon>sync</mat-icon> Sync configuration error
+  <button mat-icon-button routerLink="/install" *ngIf="syncEnabled && syncConfigured && !syncError" matTooltip="Sync enabled">
+    <mat-icon>sync</mat-icon>
   </button>
 
-  <button mat-icon-button routerLink="/install/step2-config-sync" *ngIf="syncEnabled && !syncConfigured">
+  <button mat-icon-button routerLink="/install" *ngIf="syncEnabled && syncConfigured && syncError" matTooltip="Sync error">
+    <mat-icon>sync_problem</mat-icon> Sync error
+  </button>
+
+  <button mat-icon-button routerLink="/install/step2-config-sync" *ngIf="syncEnabled && !syncConfigured" matTooltip="Sync disabled">
     <mat-icon>sync_problem</mat-icon> Sync configuration error
   </button>
 
-  <button mat-icon-button routerLink="/install" *ngIf="!syncEnabled">
+  <button mat-icon-button routerLink="/install" *ngIf="!syncEnabled" matTooltip="Sync disabled">
     <mat-icon>sync_disabled</mat-icon>
   </button>
+
+  <a mat-button [routerLink]="['notes', 'new']">New note</a>
 </mat-toolbar>

@@ -8,9 +8,6 @@
 </mat-card>
 
 <div class="content-wrapper">
-
-  <a mat-raised-button color="primary" [routerLink]="['new']">New</a>
-
   <mat-accordion>
     <mat-expansion-panel *ngFor="let note of notes; let panelIndex = index" [expanded]="selectedIndex === panelIndex" (opened)="setIndex(panelIndex)" hideToggle="true">
       <mat-expansion-panel-header>
