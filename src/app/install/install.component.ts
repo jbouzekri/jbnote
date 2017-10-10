@@ -36,7 +36,10 @@ export class InstallComponent {
     this.createForms();
   }
 
-  createForms() {
+  /**
+   * Create the different formControl used to manipulate the stepper
+   */
+  protected createForms() {
     this.enableSyncFormControl = new FormControl();
     this.enableSyncFormControl.setErrors({step: false});
 

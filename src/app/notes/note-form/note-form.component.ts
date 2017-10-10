@@ -12,6 +12,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import * as Prism from 'prismjs';
 
+import { NotesService } from '../services/notes.service';
+import { LoggerService } from '../../shared/logger.service';
+
+
 @Component({
   selector: 'app-note-form',
   templateUrl: './note-form.component.html',
@@ -26,6 +30,13 @@ export class NoteFormComponent implements OnInit {
   @ViewChild('bodyField')
   bodyField: ElementRef;
 
+  /**
+   * @param {LoggerService} logger
+   * @param {FormBuilder} fb
+   * @param {NotesService} notesService
+   * @param {Router} router
+   * @param {ActivatedRoute} route
+   */
   constructor(
     private logger: LoggerService,
     private fb: FormBuilder,
@@ -114,7 +125,3 @@ export class NoteFormComponent implements OnInit {
   // Helper to access the form body field in the template
   get body() { return this.noteForm.get('body'); }
 }
-import { NotesService } from '../services/notes.service';
-
-
-import { LoggerService } from '../../shared/logger.service';

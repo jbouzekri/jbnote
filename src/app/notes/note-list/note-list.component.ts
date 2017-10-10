@@ -25,6 +25,7 @@ import { LoggerService } from '../../shared/logger.service';
   styleUrls: ['./note-list.component.css']
 })
 export class NoteListComponent implements OnInit, OnDestroy {
+
   selectedIndex = null; // Currently selected note in material expansion component
   notes: Note[] = []; // List of notes to display in the template
 
@@ -43,6 +44,10 @@ export class NoteListComponent implements OnInit, OnDestroy {
   // Subject to force the refresh of the note list
   private forceListReload = new Subject<void>();
 
+  /**
+   * @param {LoggerService} logger
+   * @param {NotesService} notesService
+   */
   constructor(
     private logger: LoggerService,
     private notesService: NotesService

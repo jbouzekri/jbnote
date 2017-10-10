@@ -12,7 +12,6 @@ import { Autosize } from 'ng-autosize';
 
 import { SharedModule } from '../shared/shared.module';
 import { NoteListComponent } from './note-list/note-list.component';
-import { NoteDetailComponent } from './note-detail/note-detail.component';
 import { NoteFormComponent } from './note-form/note-form.component';
 import { NotesComponent } from './notes.component';
 import { NotesService } from './services/notes.service';
@@ -30,7 +29,6 @@ import { FirebaseStorageService } from './services/storage/firebase-storage.serv
   ],
   declarations: [
     NoteListComponent,
-    NoteDetailComponent,
     NoteFormComponent,
     NotesComponent,
     Autosize

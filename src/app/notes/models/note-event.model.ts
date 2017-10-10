@@ -10,6 +10,12 @@ import { Note } from './note.model';
 
 export class NoteEvent {
 
+  /**
+   * @param {"db" | "firebase"} source
+   * @param {"refresh" | "delete" | "index"} action
+   * @param {Note} data
+   * @param {"db" | "firebase" | "searchengine"} target
+   */
   constructor(
     public source: 'db'|'firebase',
     public action: 'refresh'|'delete'|'index',

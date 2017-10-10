@@ -33,6 +33,12 @@ export class ConfigSyncComponent {
 
   configForm: FormGroup; // Firebase remote sync config reactive form group
 
+  /**
+   * @param {FormBuilder} fb
+   * @param {ConfigStorageService} config
+   * @param {LoggerService} logger
+   * @param {ChangeDetectorRef} cdRef
+   */
   constructor(
     private fb: FormBuilder,
     private config: ConfigStorageService,

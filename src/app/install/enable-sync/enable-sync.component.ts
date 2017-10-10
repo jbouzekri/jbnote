@@ -21,6 +21,10 @@ export class EnableSyncComponent {
   @Output()
   syncStatus = new EventEmitter<boolean>(); // Inform parent component of the new sync status
 
+  /**
+   * @param {ConfigStorageService} config
+   * @param {LoggerService} logger
+   */
   constructor(
     private config: ConfigStorageService,
     private logger: LoggerService

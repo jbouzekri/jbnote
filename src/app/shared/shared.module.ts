@@ -1,3 +1,10 @@
+/**
+ * A module to share common modules (mainly material components)
+ *
+ * @module app/shared/shared.module
+ * @licence MIT 2017 https://github.com/jbouzekri/jbnote/blob/master/LICENSE
+ */
+
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';

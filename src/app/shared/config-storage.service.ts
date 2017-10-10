@@ -7,6 +7,8 @@
 
 import { EventEmitter } from '@angular/core';
 
+import { ConfigFirebase } from './config-firebase.model';
+
 /**
  * Abstract class that all configuration store must extend
  *
@@ -17,17 +19,47 @@ import { EventEmitter } from '@angular/core';
 export abstract class ConfigStorageService {
   confChanged = new EventEmitter<void>();
 
+  /**
+   * Return true if installation has been completed
+   *
+   * @returns {boolean}
+   */
   abstract isInstalled(): boolean;
 
-  abstract hasSyncEnabled(): boolean;
-
+  /**
+   * Check if sync is enabled
+   *
+   * @returns {boolean}
+   */
   abstract isSyncEnabled(): boolean;
 
+  /**
+   * Enable/disable sync
+   *
+   * @param {boolean} syncEnabled
+   * @returns {ConfigLocalStorageService}
+   */
   abstract setSyncEnabled(syncEnabled: boolean): ConfigStorageService;
 
+  /**
+   * Check if sync is configured
+   *
+   * @returns {boolean}
+   */
   abstract hasConfig(): boolean;
 
-  abstract getConfig(): object;
+  /**
+   * Get sync configuration
+   *
+   * @returns {ConfigFirebase}
+   */
+  abstract getConfig(): ConfigFirebase;
 
-  abstract setConfig(config: object): ConfigStorageService;
+  /**
+   * Save the sync configuration
+   *
+   * @param {ConfigFirebase} config
+   * @returns {ConfigLocalStorageService}
+   */
+  abstract setConfig(config: ConfigFirebase): ConfigStorageService;
 }
