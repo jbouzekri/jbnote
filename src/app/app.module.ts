@@ -29,6 +29,7 @@ import { ConfigStorageService } from './shared/config-storage.service';
 import { ConfigLocalStorageService } from './shared/config-local-storage.service';
 import { LoggerService } from './shared/logger.service';
 import { IndexedDBGuard } from './shared/indexeddb-guard.service';
+import { SyncStatusService } from './shared/sync-status.service';
 import { ErrorComponent } from './error/error.component';
 import { SharedModule } from './shared/shared.module';
 import { HeaderComponent } from './header/header.component';
@@ -52,7 +53,8 @@ import { HeaderComponent } from './header/header.component';
     // Global because shared between modules
     { provide: ConfigStorageService, useClass: ConfigLocalStorageService },
     LoggerService,
-    IndexedDBGuard
+    IndexedDBGuard,
+    SyncStatusService
   ],
   bootstrap: [AppComponent]
 })

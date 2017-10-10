@@ -9,6 +9,7 @@ import { Injectable } from '@angular/core';
 import * as firebase from 'firebase';
 
 import { LoggerService } from '../../../shared/logger.service';
+import { SyncStatusService } from '../../../shared/sync-status.service';
 import { NotesEventBusService } from '../notes-event-bus.service';
 import { RemoteStorageService } from './remote-storage.service';
 import { ConfigStorageService } from '../../../shared/config-storage.service';
@@ -23,7 +24,7 @@ export class FirebaseStorageService extends RemoteStorageService {
 
   // A promise used to be sure that all queries are done
   // after authentication
-  authPromise: firebase.Promise<any>;
+  authPromise: Promise<any>;
 
   /**
    * On instantiation, connects to event bus to potentially
@@ -31,11 +32,13 @@ export class FirebaseStorageService extends RemoteStorageService {
    *
    * @param {ConfigStorageService} config
    * @param {NotesEventBusService} eventBus
+   * @param {SyncStatusService} syncStatus
    * @param {LoggerService} logger
    */
   constructor(
     private config: ConfigStorageService,
     private eventBus: NotesEventBusService,
+    private syncStatus: SyncStatusService,
     private logger: LoggerService
   ) {
     super();
@@ -115,6 +118,8 @@ export class FirebaseStorageService extends RemoteStorageService {
         this.logger.debug('FirebaseStorageService child_removed event', data.val());
         this.eventBus.emit(new NoteEvent('firebase', 'delete', data.val()));
       });
+
+      this.syncStatus.emitSuccess();
     });
   }
 
@@ -137,7 +142,7 @@ export class FirebaseStorageService extends RemoteStorageService {
         .signInWithEmailAndPassword(username, password)
         .catch(error => {
           this.logger.error('error signing in firebase', error);
-          // TODO : sync state
+          this.syncStatus.emitError();
         });
     } else {
       this.authPromise = Promise.resolve();
@@ -153,6 +158,8 @@ export class FirebaseStorageService extends RemoteStorageService {
   protected remoteSync(event: NoteEvent) {
     const note = event.data;
     return this.get(note.id).then(remoteData => {
+      this.syncStatus.emitSuccess();
+
       // We update remote if :
       //   - note not found on remote
       //   - or event is a deletion and the deletedAt field is not set on remote
@@ -168,7 +175,7 @@ export class FirebaseStorageService extends RemoteStorageService {
       return;
     }).catch(error => {
       this.logger.error('error remotesync in firebase', event, error);
-      // TODO : sync state
+      this.syncStatus.emitError();
     });
   }
 
@@ -201,7 +208,7 @@ export class FirebaseStorageService extends RemoteStorageService {
    * Clear the firebase app
    */
   protected clear() {
-    if (this.authPromise instanceof firebase.Promise) {
+    if (this.authPromise instanceof Promise) {
       this.app.auth().signOut();
     }
 

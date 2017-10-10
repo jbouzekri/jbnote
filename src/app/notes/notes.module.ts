@@ -25,12 +25,13 @@ import { RemoteStorageService } from './services/storage/remote-storage.service'
 import { LoggerService } from '../shared/logger.service';
 import { NoRemoteStorageService } from './services/storage/no-remote-storage.service';
 import { SharedModule } from '../shared/shared.module';
+import { SyncStatusService } from '../shared/sync-status.service';
 
-export function provideRemoteStorageService(config: ConfigStorageService, eventBus, logger) {
+export function provideRemoteStorageService(config: ConfigStorageService, eventBus, syncStatus, logger) {
   if (config.isSyncEnabled()) {
-    return new FirebaseStorageService(config, eventBus, logger);
+    return new FirebaseStorageService(config, eventBus, syncStatus, logger);
   } else {
-    return new NoRemoteStorageService(config, eventBus, logger);
+    return new NoRemoteStorageService(logger);
   }
 }
 
@@ -54,7 +55,7 @@ export function provideRemoteStorageService(config: ConfigStorageService, eventB
     {
       provide: RemoteStorageService,
       useFactory: provideRemoteStorageService,
-      deps: [ConfigStorageService, NotesEventBusService, LoggerService]
+      deps: [ConfigStorageService, NotesEventBusService, SyncStatusService, LoggerService]
     },
     FirebaseStorageService
   ]

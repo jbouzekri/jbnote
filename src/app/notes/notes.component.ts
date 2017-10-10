@@ -21,17 +21,9 @@ import { NotesService } from './services/notes.service';
 export class NotesComponent implements OnInit, OnDestroy {
 
   appReady = false;
-  fullSyncStatus: string = null;
-
-  subscription: Subscription;
 
   constructor(private logger: LoggerService, private notesService: NotesService) {
     this.logger.debug('NotesComponent instanced');
-
-    this.subscription = this
-      .notesService
-      .fullSyncStatus$
-      .subscribe(syncStatus => this.fullSyncStatus = syncStatus);
   }
 
   ngOnInit() {
@@ -39,7 +31,6 @@ export class NotesComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    if (this.subscription) { this.subscription.unsubscribe(); }
     this.notesService.destroy();
   }
 }

@@ -44,6 +44,7 @@ export class ConfigLocalStorageService extends ConfigStorageService {
 
   setSyncEnabled(syncEnabled: boolean): ConfigLocalStorageService {
     localStorage.setItem(SYNC_ENABLED_KEY, (syncEnabled) ? '1' : '0');
+    this.confChanged.emit();
     return this;
   }
 
@@ -57,6 +58,7 @@ export class ConfigLocalStorageService extends ConfigStorageService {
 
   setConfig(config: object): ConfigLocalStorageService {
     localStorage.setItem(SYNC_CONFIG_KEY, JSON.stringify(config));
+    this.confChanged.emit();
     return this;
   }
 }

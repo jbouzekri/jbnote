@@ -10,15 +10,11 @@ import { Injectable } from '@angular/core';
 
 import { LoggerService } from '../../../shared/logger.service';
 import { RemoteStorageService } from './remote-storage.service';
-import { ConfigStorageService } from '../../../shared/config-storage.service';
-import { NotesEventBusService } from '../notes-event-bus.service';
 
 @Injectable()
 export class NoRemoteStorageService extends RemoteStorageService {
 
   constructor(
-    private config: ConfigStorageService,
-    private eventBus: NotesEventBusService,
     private logger: LoggerService
   ) {
     super();

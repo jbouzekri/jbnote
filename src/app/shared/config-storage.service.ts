@@ -5,6 +5,8 @@
  * @licence MIT 2017 https://github.com/jbouzekri/jbnote/blob/master/LICENSE
  */
 
+import { EventEmitter } from '@angular/core';
+
 /**
  * Abstract class that all configuration store must extend
  *
@@ -13,6 +15,8 @@
  * - something else in chrome extension or mobile app
  */
 export abstract class ConfigStorageService {
+  confChanged = new EventEmitter<void>();
+
   abstract isInstalled(): boolean;
 
   abstract hasSyncEnabled(): boolean;
