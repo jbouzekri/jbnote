@@ -11,8 +11,8 @@
     <mat-icon>sync</mat-icon>
   </button>
 
-  <button mat-icon-button routerLink="/install" *ngIf="syncEnabled && !(syncConfigured || syncError)" matTooltip="Sync error">
-    <mat-icon>sync_problem</mat-icon> Sync error
+  <button mat-icon-button routerLink="/install" *ngIf="syncEnabled && (!syncConfigured || syncError)" matTooltip="Sync error">
+    <mat-icon>sync_problem</mat-icon>
   </button>
 
   <button mat-icon-button routerLink="/install" *ngIf="!syncEnabled" matTooltip="Sync disabled">

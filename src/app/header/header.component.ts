@@ -1,3 +1,11 @@
+/**
+ * Header component
+ * Display the header in the app
+ *
+ * @module app/header/header.component
+ * @licence MIT 2017 https://github.com/jbouzekri/jbnote/blob/master/LICENSE
+ */
+
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 
@@ -13,14 +21,21 @@ import { SyncStatusService } from '../shared/sync-status.service';
 })
 export class HeaderComponent implements OnInit, OnDestroy {
 
-  syncEnabled: boolean;
-  syncConfigured: boolean;
-  syncError = false;
+  syncEnabled: boolean; // Boolean to track sync activation
+  syncConfigured: boolean; // Boolean to track sync configuration
+  syncError = false; // Boolean to track sync status
 
+  // rxjs subscription triggered when sync config changes
   onConfChange: Subscription;
 
+  // rxjs subscription triggered when sync error
   onSyncErrorChange: Subscription;
 
+  /**
+   * @param {LoggerService} logger
+   * @param {ConfigStorageService} config
+   * @param {SyncStatusService} syncStatus
+   */
   constructor(
     private logger: LoggerService,
     private config: ConfigStorageService,
@@ -29,6 +44,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.logger.debug('HeaderComponent instanced');
   }
 
+  /**
+   * on component init, it subscribes to :
+   * - on configuration changes events
+   * - on sync error events
+   */
   ngOnInit() {
     this.onConfChange = this.config.confChanged.subscribe(() => {
       this.updateSyncStatus(this.syncError);
@@ -39,12 +59,20 @@ export class HeaderComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Update the different boolean tracking sync states
+   *
+   * @param {boolean} error : set the syncError boolean
+   */
   protected updateSyncStatus(error: boolean) {
     this.syncEnabled = this.config.isSyncEnabled();
     this.syncConfigured = this.config.hasConfig();
     this.syncError = error;
   }
 
+  /**
+   * on component destroy, unsubscribe from all observables
+   */
   ngOnDestroy() {
     if (this.onConfChange) {
       this.onConfChange.unsubscribe();

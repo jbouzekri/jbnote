@@ -14,7 +14,6 @@ import { MatStepper } from '@angular/material';
 import { LoggerService } from '../shared/logger.service';
 
 
-
 @Component({
   selector: 'app-install',
   templateUrl: './install.component.html',

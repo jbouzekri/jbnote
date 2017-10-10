@@ -11,14 +11,13 @@ import * as firebase from 'firebase';
 import { LoggerService } from '../../../shared/logger.service';
 import { SyncStatusService } from '../../../shared/sync-status.service';
 import { NotesEventBusService } from '../notes-event-bus.service';
-import { RemoteStorageService } from './remote-storage.service';
 import { ConfigStorageService } from '../../../shared/config-storage.service';
 import { NoteEvent } from '../../models/note-event.model';
 import { Note } from '../../models/note.model';
 
 
 @Injectable()
-export class FirebaseStorageService extends RemoteStorageService {
+export class FirebaseStorageService {
 
   app: firebase.app.App; // The firebase app
 
@@ -41,8 +40,6 @@ export class FirebaseStorageService extends RemoteStorageService {
     private syncStatus: SyncStatusService,
     private logger: LoggerService
   ) {
-    super();
-
     this.logger.debug('FirebaseStorageService instanced');
 
     this.watchEvents();
@@ -59,6 +56,9 @@ export class FirebaseStorageService extends RemoteStorageService {
     if (!this.config.isSyncEnabled()) {
       return Promise.resolve();
     }
+
+    // Reset sync status
+    this.syncStatus.emitSuccess();
 
     // Initialize Firebase
     const firebaseConf = this.config.getConfig();
@@ -118,8 +118,6 @@ export class FirebaseStorageService extends RemoteStorageService {
         this.logger.debug('FirebaseStorageService child_removed event', data.val());
         this.eventBus.emit(new NoteEvent('firebase', 'delete', data.val()));
       });
-
-      this.syncStatus.emitSuccess();
     });
   }
 
@@ -158,8 +156,6 @@ export class FirebaseStorageService extends RemoteStorageService {
   protected remoteSync(event: NoteEvent) {
     const note = event.data;
     return this.get(note.id).then(remoteData => {
-      this.syncStatus.emitSuccess();
-
       // We update remote if :
       //   - note not found on remote
       //   - or event is a deletion and the deletedAt field is not set on remote

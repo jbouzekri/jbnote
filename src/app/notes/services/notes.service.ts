@@ -9,53 +9,42 @@
 import { Injectable } from '@angular/core';
 
 import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
 
 import { LoggerService } from '../../shared/logger.service';
 import { Note } from '../models/note.model';
 import { IndexeddbStorageService } from './storage/indexeddb-storage.service';
 import { SearchEngineStorageService } from './storage/searchengine-storage.service';
-import { RemoteStorageService } from './storage/remote-storage.service';
+import { FirebaseStorageService } from './storage/firebase-storage.service';
 
 
 @Injectable()
 export class NotesService {
 
-  private fullSyncSource = new Subject<string>();
-
-  // An observable used to indicate that a full sync is in progress
-  // And which step it is doing right now
-  fullSyncStatus$ = this.fullSyncSource.asObservable();
-
+  /**
+   * @param {LoggerService} logger
+   * @param {IndexeddbStorageService} db
+   * @param {SearchEngineStorageService} searchEngine
+   * @param {FirebaseStorageService} remote
+   */
   constructor(
     private logger: LoggerService,
     private db: IndexeddbStorageService,
     private searchEngine: SearchEngineStorageService,
-    private remote: RemoteStorageService
+    private remote: FirebaseStorageService
   ) {
     this.logger.debug('NotesService instanced');
   }
 
+  /**
+   * Called when the root notes component is instanciated to
+   * init all the databases (remote and local)
+   *
+   * @returns {Promise<void>}
+   */
   init() {
     return this.remote.init().then(() => {
       return this.db.init();
     });
-  }
-
-  destroy() {
-    return this.remote.destroy();
-  }
-
-  save(note: Note): Observable<Note> {
-    const savePromise = this.db.save(note);
-
-    return Observable.fromPromise(savePromise);
-  }
-
-  remove(note: Note) {
-    const deletePromise = this.db.remove(note);
-
-    return Observable.fromPromise(deletePromise);
   }
 
   /**
@@ -102,5 +91,40 @@ export class NotesService {
       });
 
     return Observable.fromPromise(searchPromise);
+  }
+
+  /**
+   * Save a note in local database
+   * This emits an event that can be processed by the remote database
+   *
+   * @param {Note} note
+   * @returns {Observable<Note>}
+   */
+  save(note: Note): Observable<Note> {
+    const savePromise = this.db.save(note);
+
+    return Observable.fromPromise(savePromise);
+  }
+
+  /**
+   * Remove a note from local database
+   * Local db emits an event that can be processed by the remote database
+   * @param {Note} note
+   * @returns {Observable<Note>}
+   */
+  remove(note: Note) {
+    const deletePromise = this.db.remove(note);
+
+    return Observable.fromPromise(deletePromise);
+  }
+
+  /**
+   * Called when the root notes component is destroyed to
+   * deconnect from remote mainly
+   *
+   * @returns {void}
+   */
+  destroy() {
+    return this.remote.destroy();
   }
 }
