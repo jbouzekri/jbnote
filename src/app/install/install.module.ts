@@ -15,6 +15,7 @@ import { InstallComponent } from './install.component';
 import { ConfigTutorialComponent } from './config-tutorial/config-tutorial.component';
 import { EnableSyncComponent } from './enable-sync/enable-sync.component';
 import { ConfigSyncComponent } from './config-sync/config-sync.component';
+import { ZoomImageDirective, ZoomImageDialogComponent } from './config-tutorial/zoom-image.directive';
 
 
 @NgModule({
@@ -26,7 +27,12 @@ import { ConfigSyncComponent } from './config-sync/config-sync.component';
     InstallComponent,
     ConfigTutorialComponent,
     EnableSyncComponent,
-    ConfigSyncComponent
+    ConfigSyncComponent,
+    ZoomImageDialogComponent,
+    ZoomImageDirective
+  ],
+  entryComponents: [
+    ZoomImageDialogComponent
   ]
 })
 export class InstallModule { }
