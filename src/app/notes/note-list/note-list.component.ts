@@ -13,6 +13,15 @@ import { FormGroup } from '@angular/forms';
 import { Subject } from 'rxjs/Subject';
 import { Subscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/first';
+import 'rxjs/add/observable/merge';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/debounceTime';
+import 'rxjs/add/operator/distinctUntilChanged';
+import 'rxjs/add/operator/switchMap';
+import 'rxjs/add/operator/startWith';
+import 'rxjs/add/operator/last';
+import 'rxjs/add/operator/catch';
 
 import { Note } from '../models/note.model';
 import { NotesService } from '../services/notes.service';

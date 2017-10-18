@@ -7,6 +7,7 @@
  */
 
 import { Injectable } from '@angular/core';
+import 'rxjs/add/operator/filter';
 
 import { DB, UpgradeDB } from 'idb';
 import { v1 } from 'uuid';

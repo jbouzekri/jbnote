@@ -1,6 +1,15 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { RouterOutletStubComponent } from '../../testing';
 import { NotesComponent } from './notes.component';
+import { SHARED_PROVIDERS } from '../../testing/shared-stubs';
+import { NotesService } from './services/notes.service';
+
+class NoteServiceStub {
+  init() {
+    return Promise.resolve();
+  }
+}
 
 describe('NotesComponent', () => {
   let component: NotesComponent;
@@ -8,7 +17,14 @@ describe('NotesComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ NotesComponent ]
+      providers: [
+        SHARED_PROVIDERS,
+        { provide: NotesService, useClass: NoteServiceStub }
+      ],
+      declarations: [
+        NotesComponent,
+        RouterOutletStubComponent
+      ]
     })
     .compileComponents();
   }));

@@ -6,6 +6,7 @@
  */
 
 import { Injectable } from '@angular/core';
+import 'rxjs/add/operator/filter';
 
 import * as lunr from 'lunr';
 

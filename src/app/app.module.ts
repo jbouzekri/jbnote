@@ -10,17 +10,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 import { Router } from '@angular/router';
 
-// Global rxjs features
-import 'rxjs/add/observable/fromPromise';
-import 'rxjs/add/observable/merge';
-import 'rxjs/add/operator/first';
-import 'rxjs/add/operator/debounceTime';
-import 'rxjs/add/operator/distinctUntilChanged';
-import 'rxjs/add/operator/switchMap';
-import 'rxjs/add/operator/startWith';
-import 'rxjs/add/operator/last';
-import 'rxjs/add/operator/filter';
-
 import { environment } from '../environments/environment';
 
 import { AppComponent } from './app.component';

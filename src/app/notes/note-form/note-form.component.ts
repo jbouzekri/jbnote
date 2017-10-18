@@ -9,6 +9,7 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import 'rxjs/add/operator/first';
 
 import * as Prism from 'prismjs';
 

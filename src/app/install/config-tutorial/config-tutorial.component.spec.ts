@@ -1,6 +1,9 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ConfigTutorialComponent } from './config-tutorial.component';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+
+import { SharedModule } from '../../shared/shared.module';
 
 describe('ConfigTutorialComponent', () => {
   let component: ConfigTutorialComponent;
@@ -8,6 +11,7 @@ describe('ConfigTutorialComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      imports: [ SharedModule, NoopAnimationsModule ],
       declarations: [ ConfigTutorialComponent ]
     })
     .compileComponents();

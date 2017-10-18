@@ -9,6 +9,7 @@
 import { Injectable } from '@angular/core';
 
 import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/fromPromise';
 
 import { LoggerService } from '../../shared/logger.service';
 import { Note } from '../models/note.model';

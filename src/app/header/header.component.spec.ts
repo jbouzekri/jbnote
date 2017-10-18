@@ -1,4 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { SharedModule } from '../shared/shared.module';
+import { RouterLinkStubDirective, SHARED_PROVIDERS } from '../../testing';
 
 import { HeaderComponent } from './header.component';
 
@@ -8,7 +10,14 @@ describe('HeaderComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ HeaderComponent ]
+      imports: [ SharedModule ],
+      providers: [
+        SHARED_PROVIDERS
+      ],
+      declarations: [
+        HeaderComponent,
+        RouterLinkStubDirective
+      ]
     })
     .compileComponents();
   }));

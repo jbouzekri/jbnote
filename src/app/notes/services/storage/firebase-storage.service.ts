@@ -6,6 +6,7 @@
  */
 
 import { Injectable } from '@angular/core';
+import 'rxjs/add/operator/filter';
 import * as firebase from 'firebase';
 
 import { LoggerService } from '../../../shared/logger.service';
