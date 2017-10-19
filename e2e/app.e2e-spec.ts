@@ -7,8 +7,27 @@ describe('jbnote App', () => {
     page = new AppPage();
   });
 
-  it('should display welcome message', () => {
+  afterEach(function() {
+    page.clear();
+  });
+
+  it('should display installation page on startup', () => {
     page.navigateTo();
-    expect(page.getParagraphText()).toEqual('Welcome to app!');
+    expect(page.getParagraphText()).toEqual('Installation');
+    expect(page.getCurrentUrl(false)).toEqual('/install');
+  });
+
+  it('should redirect to installation page if install not finished', () => {
+    page.navigateTo('/notes');
+    expect(page.getParagraphText()).toEqual('Installation');
+    expect(page.getCurrentUrl(false)).toEqual('/install');
+
+    page.navigateTo('/notes/new');
+    expect(page.getParagraphText()).toEqual('Installation');
+    expect(page.getCurrentUrl(false)).toEqual('/install');
+
+    page.navigateTo('/notes/1/edit');
+    expect(page.getParagraphText()).toEqual('Installation');
+    expect(page.getCurrentUrl(false)).toEqual('/install');
   });
 });
