@@ -6,7 +6,7 @@
  * @licence MIT 2017 https://github.com/jbouzekri/jbnote/blob/master/LICENSE
  */
 
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormControl } from '@angular/forms';
 import { MatStepper } from '@angular/material';
@@ -19,11 +19,11 @@ import { LoggerService } from '../shared/logger.service';
   templateUrl: './install.component.html',
   styleUrls: ['./install.component.css']
 })
-export class InstallComponent {
+export class InstallComponent implements OnInit {
 
-  enableSyncFormControl: FormControl; // FormControl for enable sync md-step
+  enableSyncFormControl: FormControl = new FormControl(); // FormControl for enable sync md-step
 
-  configSyncFormControl: FormControl; // FormControl for config sync md-step
+  configSyncFormControl: FormControl = new FormControl(); // FormControl for config sync md-step
 
   @ViewChild('stepper')
   stepper: MatStepper; // Reference to stepper to trigger navigation from code
@@ -33,17 +33,13 @@ export class InstallComponent {
     private logger: LoggerService
   ) {
     this.logger.debug('InstallComponent instanced');
-    this.createForms();
   }
 
   /**
    * Create the different formControl used to manipulate the stepper
    */
-  protected createForms() {
-    this.enableSyncFormControl = new FormControl();
+  ngOnInit() {
     this.enableSyncFormControl.setErrors({step: false});
-
-    this.configSyncFormControl = new FormControl();
     this.configSyncFormControl.setErrors({step: false});
   }
 

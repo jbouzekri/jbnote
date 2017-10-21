@@ -6,7 +6,7 @@
  * @licence MIT 2017 https://github.com/jbouzekri/jbnote/blob/master/LICENSE
  */
 
-import { ChangeDetectorRef, Component, EventEmitter, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { ConfigStorageService } from '../../shared/config-storage.service';
@@ -24,7 +24,7 @@ const FIREBASE_STORAGE_BUCKET_REGEX = /^[A-Za-z0-9_\-]+\.appspot\.com$/;
   templateUrl: './config-sync.component.html',
   styleUrls: ['./config-sync.component.css']
 })
-export class ConfigSyncComponent {
+export class ConfigSyncComponent implements OnInit {
   @Output()
   cancel = new EventEmitter<void>(); // Event to inform parent component when user click on back button
 
@@ -66,9 +66,6 @@ export class ConfigSyncComponent {
       password: null
     });
 
-    // Fill the form with values already stored or empty default value
-    this.configForm.setValue(this.config.getConfig() || new ConfigFirebase());
-
     // Based on the chose the user does about security in Firebase
     // username / password can be mandatory or not in the form
     this.enableAuth.valueChanges.forEach(
@@ -88,6 +85,15 @@ export class ConfigSyncComponent {
         this.cdRef.detectChanges();
       }
     );
+  }
+
+  /**
+   * Init dynamic bindings
+   */
+  ngOnInit() {
+    // Fill the form with values already stored or empty default value
+    this.configForm.setValue(this.config.getConfig() || new ConfigFirebase());
+    console.log(this.configForm);
   }
 
   /**
