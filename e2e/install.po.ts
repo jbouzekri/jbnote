@@ -1,17 +1,22 @@
-import { browser, by, element } from 'protractor';
+import { CommonTools } from './common.po';
 
-import { AppPage } from './app.po';
-
-export class InstallPage extends AppPage {
-  disableSync() {
-    return element(by.css('#install-disable-sync-btn')).click();
+export class InstallPage extends CommonTools {
+  enableSync() {
+    return this.getElByCss('#install-enable-sync-btn').click();
   }
 
-  enableSync() {
-    return element(by.css('#install-enable-sync-btn')).click();
+  disableSync() {
+    return this.getElByCss('#install-disable-sync-btn').click();
+  }
+
+  async goToConfigSyncStep() {
+    this.navigateTo('/install');
+    this.enableSync();
+    await this.waitToBeVisible('app-config-sync', 1000);
+    await this.waitToBePresent('#mat-input-0', 1000);
   }
 
   getInstallStep(index: number = 0) {
-    return element(by.css(`mat-horizontal-stepper mat-step-header[ng-reflect-index="${index}"]`));
+    return this.getElByCss(`mat-horizontal-stepper mat-step-header[ng-reflect-index="${index}"]`);
   }
 }
