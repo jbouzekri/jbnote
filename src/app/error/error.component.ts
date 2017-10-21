@@ -15,7 +15,7 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class ErrorComponent implements OnInit {
   // Based on the type of the error, the template is updated
-  protected errorType: string;
+  errorType: string;
 
   constructor(private route: ActivatedRoute) {}
 

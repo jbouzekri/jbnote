@@ -33,7 +33,7 @@ describe('ZoomImageDirective', () => {
           return {getContainerElement: () => overlayContainerElement };
         }}
       ]
-    })
+    });
 
     TestBed.compileComponents();
   }));

@@ -7,7 +7,7 @@
  * @licence MIT 2017 https://github.com/jbouzekri/jbnote/blob/master/LICENSE
  */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 
 import { Subject } from 'rxjs/Subject';
@@ -34,6 +34,8 @@ import { LoggerService } from '../../shared/logger.service';
   styleUrls: ['./note-list.component.css']
 })
 export class NoteListComponent implements OnInit, OnDestroy {
+  @ViewChild('menu')
+  menu: ElementRef; // Unused in componenet. Here because of lint in template
 
   selectedIndex = null; // Currently selected note in material expansion component
   notes: Note[] = []; // List of notes to display in the template

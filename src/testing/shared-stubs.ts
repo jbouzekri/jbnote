@@ -43,4 +43,4 @@ export const SHARED_PROVIDERS = [
   { provide: ConfigStorageService, useClass: ConfigStorageStubService },
   { provide: LoggerService, useClass: LoggerStubService },
   { provide: SyncStatusService, useClass: SyncStatusSubService }
-]
+];

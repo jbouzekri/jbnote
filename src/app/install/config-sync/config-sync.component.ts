@@ -93,7 +93,6 @@ export class ConfigSyncComponent implements OnInit {
   ngOnInit() {
     // Fill the form with values already stored or empty default value
     this.configForm.setValue(this.config.getConfig() || new ConfigFirebase());
-    console.log(this.configForm);
   }
 
   /**
