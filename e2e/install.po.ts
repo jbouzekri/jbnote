@@ -12,8 +12,8 @@ export class InstallPage extends CommonTools {
   async goToConfigSyncStep() {
     this.navigateTo('/install');
     this.enableSync();
-    await this.waitToBeVisible('app-config-sync', 1000);
-    await this.waitToBePresent('#mat-input-0', 1000);
+    await this.waitToBeVisible('app-config-sync', 10);
+    await this.waitToBePresent('#mat-input-0', 10);
   }
 
   getInstallStep(index: number = 0) {

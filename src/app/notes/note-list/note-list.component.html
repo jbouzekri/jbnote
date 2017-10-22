@@ -23,7 +23,7 @@
           <mat-icon>more_vert</mat-icon>
         </button>
         <mat-menu #menu="matMenu">
-          <button mat-menu-item [disabled]="selectedIndex === panelIndex" (click)="setIndex(panelIndex)">
+          <button mat-menu-item (click)="setIndex(panelIndex)">
             <mat-icon>subject</mat-icon>
             <span>View</span>
           </button>

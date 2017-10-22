@@ -1,6 +1,5 @@
 import { InstallPage } from './install.po';
 import { hasClass } from './common.po';
-import { Key } from 'selenium-webdriver';
 import { browser } from 'protractor';
 
 describe('jbnote Install', () => {
@@ -70,37 +69,25 @@ describe('jbnote Install', () => {
   it('should apply correct validation rules to fields', async (done) => {
     await page.goToConfigSyncStep();
 
-    const apiKeyField = page.getElByCss('#mat-input-0');
-    apiKeyField.clear();
-    apiKeyField.sendKeys('invalid@ApiKey');
-    apiKeyField.sendKeys(Key.TAB);
+    const apiKeyField = page.fillField('#mat-input-0', 'invalid@ApiKey');
     expect(hasClass(apiKeyField, 'ng-invalid')).toBe(true);
     const apiKeyErrorSelector = 'app-config-sync form mat-form-field:nth-child(1) mat-error';
     await page.waitToBePresent(apiKeyErrorSelector, 1);
     expect(page.getElByCss(apiKeyErrorSelector).getText()).toBe('Please enter a valid apiKey');
 
-    const authDomainField = page.getElByCss('#mat-input-1');
-    authDomainField.clear();
-    authDomainField.sendKeys('invalid@authDomain');
-    authDomainField.sendKeys(Key.TAB);
+    const authDomainField = page.fillField('#mat-input-1', 'invalid@authDomain');
     expect(hasClass(authDomainField, 'ng-invalid')).toBe(true);
     const authDomainErrorSelector = 'app-config-sync form mat-form-field:nth-child(2) mat-error';
     await page.waitToBePresent(authDomainErrorSelector, 1);
     expect(page.getElByCss(authDomainErrorSelector).getText()).toBe('Please enter a valid authDomain');
 
-    const databaseURLField = page.getElByCss('#mat-input-2');
-    databaseURLField.clear();
-    databaseURLField.sendKeys('invalid@databaseURL');
-    databaseURLField.sendKeys(Key.TAB);
-    const databaseURLErrorSelector = 'app-config-sync form mat-form-field:nth-child(3) mat-error';
+    const databaseURLField = page.fillField('#mat-input-2', 'invalid@databaseURL');
     expect(hasClass(databaseURLField, 'ng-invalid')).toBe(true);
+    const databaseURLErrorSelector = 'app-config-sync form mat-form-field:nth-child(3) mat-error';
     await page.waitToBePresent(databaseURLErrorSelector, 1);
     expect(page.getElByCss(databaseURLErrorSelector).getText()).toBe('Please enter a valid databaseURL');
 
-    const storageBucketField = page.getElByCss('#mat-input-3');
-    storageBucketField.clear();
-    storageBucketField.sendKeys('invalid@storageBucket');
-    storageBucketField.sendKeys(Key.TAB);
+    const storageBucketField = page.fillField('#mat-input-3', 'invalid@storageBucket');
     expect(hasClass(storageBucketField, 'ng-invalid')).toBe(true);
     const storageBucketErrorSelector = 'app-config-sync form mat-form-field:nth-child(4) mat-error';
     await page.waitToBePresent(storageBucketErrorSelector, 1);
@@ -116,28 +103,16 @@ describe('jbnote Install', () => {
 
     await page.goToConfigSyncStep();
 
-    const apiKeyField = page.getElByCss('#mat-input-0');
-    apiKeyField.clear();
-    apiKeyField.sendKeys('thisisavalidkey');
-    apiKeyField.sendKeys(Key.TAB);
+    const apiKeyField = page.fillField('#mat-input-0', 'thisisavalidkey');
     expect(hasClass(apiKeyField, 'ng-invalid')).toBe(false);
 
-    const authDomainField = page.getElByCss('#mat-input-1');
-    authDomainField.clear();
-    authDomainField.sendKeys('somekey-98712.firebaseapp.com');
-    authDomainField.sendKeys(Key.TAB);
+    const authDomainField = page.fillField('#mat-input-1', 'somekey-98712.firebaseapp.com');
     expect(hasClass(authDomainField, 'ng-invalid')).toBe(false);
 
-    const databaseURLField = page.getElByCss('#mat-input-2');
-    databaseURLField.clear();
-    databaseURLField.sendKeys('https://somekey-87641.firebaseio.com');
-    databaseURLField.sendKeys(Key.TAB);
+    const databaseURLField = page.fillField('#mat-input-2', 'https://somekey-87641.firebaseio.com');
     expect(hasClass(databaseURLField, 'ng-invalid')).toBe(false);
 
-    const storageBucketField = page.getElByCss('#mat-input-3');
-    storageBucketField.clear();
-    storageBucketField.sendKeys('somekey-03257.appspot.com');
-    storageBucketField.sendKeys(Key.TAB);
+    const storageBucketField = page.fillField('#mat-input-3', 'somekey-03257.appspot.com');
     expect(hasClass(storageBucketField, 'ng-invalid')).toBe(false);
 
     expect(page.getElByCss('form button[type="submit"]').getAttribute('disabled')).toBe(null);
@@ -146,15 +121,8 @@ describe('jbnote Install', () => {
 
     expect(page.getElByCss('form button[type="submit"]').getAttribute('disabled')).toBe('true');
 
-    const usernameField = page.getElByCss('#mat-input-4');
-    usernameField.clear();
-    usernameField.sendKeys('myusername');
-    usernameField.sendKeys(Key.TAB);
-
-    const passwordField = page.getElByCss('#mat-input-5');
-    passwordField.clear();
-    passwordField.sendKeys('mypassword');
-    passwordField.sendKeys(Key.TAB);
+    page.fillField('#mat-input-4', 'myusername');
+    page.fillField('#mat-input-5', 'mypassword');
 
     expect(page.getElByCss('form button[type="submit"]').getAttribute('disabled')).toBe(null);
 
@@ -176,37 +144,15 @@ describe('jbnote Install', () => {
 
     await page.goToConfigSyncStep();
 
-    const apiKeyField = page.getElByCss('#mat-input-0');
-    apiKeyField.clear();
-    apiKeyField.sendKeys(apiKey);
-    apiKeyField.sendKeys(Key.TAB);
-
-    const authDomainField = page.getElByCss('#mat-input-1');
-    authDomainField.clear();
-    authDomainField.sendKeys(authDomain);
-    authDomainField.sendKeys(Key.TAB);
-
-    const databaseURLField = page.getElByCss('#mat-input-2');
-    databaseURLField.clear();
-    databaseURLField.sendKeys(databaseURL);
-    databaseURLField.sendKeys(Key.TAB);
-
-    const storageBucketField = page.getElByCss('#mat-input-3');
-    storageBucketField.clear();
-    storageBucketField.sendKeys(storageBucket);
-    storageBucketField.sendKeys(Key.TAB);
+    page.fillField('#mat-input-0', apiKey);
+    page.fillField('#mat-input-1', authDomain);
+    page.fillField('#mat-input-2', databaseURL);
+    page.fillField('#mat-input-3', storageBucket);
 
     page.getElByCss('mat-slide-toggle').click();
 
-    const usernameField = page.getElByCss('#mat-input-4');
-    usernameField.clear();
-    usernameField.sendKeys(username);
-    usernameField.sendKeys(Key.TAB);
-
-    const passwordField = page.getElByCss('#mat-input-5');
-    passwordField.clear();
-    passwordField.sendKeys(password);
-    passwordField.sendKeys(Key.TAB);
+    page.fillField('#mat-input-4', username);
+    page.fillField('#mat-input-5', password);
 
     page.getElByCss('form button[type="submit"]').click();
 

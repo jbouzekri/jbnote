@@ -28,6 +28,11 @@ module.exports = function (config) {
     logLevel: config.LOG_INFO,
     autoWatch: true,
     browsers: ['Chrome'],
-    singleRun: false
+    singleRun: false,
+    files: [
+      // Include files because of material in the test suite.
+      {pattern: './node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css'},
+      {pattern: './node_modules/hammerjs/hammer.js'},
+    ]
   });
 };

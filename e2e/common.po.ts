@@ -1,5 +1,5 @@
-import { browser, by, element, ElementFinder, ExpectedConditions } from 'protractor';
-import { promise } from 'selenium-webdriver';
+import { browser, by, element, ElementArrayFinder, ElementFinder, ExpectedConditions } from 'protractor';
+import { Key, promise } from 'selenium-webdriver';
 
 export function hasClass(element: ElementFinder, cls: string): promise.Promise<boolean> {
   return element.getAttribute('class').then(function (classes) {
@@ -22,47 +22,48 @@ export class CommonTools {
     return !withBase ? currentUrl.then((url: string) => url.replace(baseUrl, '')) : currentUrl;
   }
 
+  fillField(selector: string, value: string) {
+    const field = this.getElByCss(selector);
+    field.clear();
+    field.sendKeys(value);
+    field.sendKeys(Key.TAB);
+    return field;
+  }
+
   protected secondsToMillis(seconds: number) {
     return seconds * 1000;
   }
 
-  waitToBePresent(selector: string, seconds: number) {
+  protected waitFor(selector: string, seconds: number, cond: Function) {
     const el = this.getElByCss(selector);
     return browser.wait(
-      ExpectedConditions.presenceOf(el),
-      this.secondsToMillis(seconds),
-      'The element \'' + el.locator() + '\' is not present in ' + seconds + ' seconds.'
+      ((ele) => cond(ele))(el),
+      this.secondsToMillis(seconds)
     );
+  }
+
+  waitForElementToBeClickable(selector: string, seconds: number) {
+    return this.waitFor(selector, seconds, (el) => ExpectedConditions.elementToBeClickable(el));
+  }
+
+  waitToBePresent(selector: string, seconds: number) {
+    return this.waitFor(selector, seconds, (el) => ExpectedConditions.presenceOf(el));
   }
 
   waitToBeAbsent(selector: string, seconds: number) {
-    const el = this.getElByCss(selector);
-    return browser.wait(
-      ExpectedConditions.not(ExpectedConditions.presenceOf(el)),
-      this.secondsToMillis(seconds),
-      'The element \'' + el.locator() + '\' is still present after ' + seconds + ' seconds.'
-    );
+    return this.waitFor(selector, seconds, (el) => ExpectedConditions.not(ExpectedConditions.presenceOf(el)));
   }
 
   waitToBeVisible(selector: string, seconds: number) {
-    const el = this.getElByCss(selector);
-    return browser.wait(
-      ExpectedConditions.visibilityOf(el),
-      this.secondsToMillis(seconds),
-      'The element \'' + el.locator() + '\' did not appear within ' + seconds + ' seconds.'
-    );
+    return this.waitFor(selector, seconds, (el) => ExpectedConditions.visibilityOf(el));
   }
 
   waitToNotBeVisible(selector: string, seconds: number) {
-    const el = this.getElByCss(selector);
-    return browser.wait(
-      ExpectedConditions.not(ExpectedConditions.visibilityOf(el)),
-      this.secondsToMillis(seconds),
-      'The element \'' + el.locator() + '\' still appeared within ' + seconds + ' seconds.'
-    );
+    return this.waitFor(selector, seconds, (el) => ExpectedConditions.not(ExpectedConditions.visibilityOf(el)));
   }
 
-  async disableFirebaseSync(withAuth: boolean = true) {
+  async disableFirebaseSync() {
+    this.navigateTo('/notes');
     browser.executeScript('window.localStorage.setItem("app_sync_enabled", "0");');
     this.navigateTo('/notes');
     await this.waitToBeVisible('app-note-list', 1000);
@@ -115,9 +116,18 @@ export class CommonTools {
     return element(by.css(selector));
   }
 
+  getAllElByCss(selector: string): ElementArrayFinder {
+    return element.all(by.css(selector));
+  }
+
   clear() {
     browser.executeScript('window.sessionStorage.clear();');
     browser.executeScript('window.localStorage.clear();');
+    browser.executeScript('window.indexedDB.deleteDatabase("notes");');
+  }
+
+  restart() {
+    browser.restart();
   }
 
   pause() {
