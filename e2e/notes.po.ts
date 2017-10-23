@@ -29,4 +29,8 @@ export class NotesPage extends CommonTools {
       `body ${num}`
     );
   }
+
+  async waitForListToBePresent() {
+    return await this.waitToBePresent('app-note-list mat-accordion mat-expansion-panel', 15);
+  }
 }

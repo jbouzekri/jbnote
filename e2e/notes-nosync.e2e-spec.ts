@@ -6,10 +6,12 @@ describe('jbnote Notes No Sync', () => {
   let page: NotesPage;
 
   beforeEach(() => {
+    browser.waitForAngularEnabled(false);
     page = new NotesPage();
   });
 
   afterEach(function() {
+    browser.waitForAngularEnabled(true);
     page.restart();
   });
 
@@ -27,6 +29,7 @@ describe('jbnote Notes No Sync', () => {
   it('adds a note and shows it in list', async (done) => {
     await page.disableFirebaseSync();
     await page.createLoremIpsumNote();
+    await page.waitForListToBePresent();
 
     expect(page.getAllElByCss('mat-expansion-panel').count()).toBe(1);
 
@@ -38,6 +41,7 @@ describe('jbnote Notes No Sync', () => {
     for (let i = 0; i < 20; i++) {
       await page.createNumberedNote(i);
     }
+    await page.waitForListToBePresent();
 
     expect(page.getAllElByCss('mat-expansion-panel').count()).toBe(15);
 
@@ -50,10 +54,13 @@ describe('jbnote Notes No Sync', () => {
     for (let i = 0; i < 5; i++) {
       await page.createNumberedNote(i);
     }
+    await page.waitForListToBePresent();
 
     expect(page.getAllElByCss('mat-expansion-panel').count()).toBe(6);
 
     page.fillField('#search-box', 'Lorem');
+
+    await page.waitToBeAbsent('app-note-list mat-accordion mat-expansion-panel:nth-child(2)', 10);
 
     expect(page.getAllElByCss('mat-expansion-panel').count()).toBe(1);
 
@@ -65,6 +72,7 @@ describe('jbnote Notes No Sync', () => {
     await page.createNumberedNote(0);
     await page.createLoremIpsumNote(); // Test expands this one
     await page.createNumberedNote(1);
+    await page.waitForListToBePresent();
 
     expect(page.getAllElByCss('mat-expansion-panel').count()).toBe(3);
 
@@ -87,12 +95,15 @@ describe('jbnote Notes No Sync', () => {
     await page.createNumberedNote(0);
     await page.createLoremIpsumNote(); // Test expands this one
     await page.createNumberedNote(1);
+    await page.waitForListToBePresent();
 
     expect(page.getAllElByCss('mat-expansion-panel').count()).toBe(3);
 
     const noteSelector = 'mat-accordion mat-expansion-panel:nth-child(2)';
 
+    await page.waitToBeVisible(`${noteSelector} mat-icon`, 10);
     page.getElByCss(`${noteSelector} mat-icon`).click();
+
     await page.waitToBeVisible('.cdk-overlay-container .mat-menu-panel', 10);
     page.getElByCss('.cdk-overlay-container .mat-menu-panel .mat-menu-content button:nth-child(1)').click();
 
@@ -107,12 +118,15 @@ describe('jbnote Notes No Sync', () => {
     await page.createNumberedNote(0);
     await page.createLoremIpsumNote(); // Test expands this one
     await page.createNumberedNote(1);
+    await page.waitForListToBePresent();
 
     expect(page.getAllElByCss('mat-expansion-panel').count()).toBe(3);
 
     const noteSelector = 'mat-accordion mat-expansion-panel:nth-child(2)';
 
+    await page.waitToBeVisible(`${noteSelector} mat-icon`, 10);
     page.getElByCss(`${noteSelector} mat-icon`).click();
+
     await page.waitToBeVisible('.cdk-overlay-container .mat-menu-panel', 10);
     page.getElByCss('.cdk-overlay-container .mat-menu-panel .mat-menu-content button:nth-child(2)').click();
 
@@ -127,11 +141,13 @@ describe('jbnote Notes No Sync', () => {
     await page.createNumberedNote(0);
     await page.createNumberedNote(1);
     await page.createNumberedNote(2);
+    await page.waitForListToBePresent();
 
     expect(page.getAllElByCss('mat-expansion-panel').count()).toBe(3);
 
     page.navigateTo('/notes');
 
+    await page.waitForListToBePresent();
     expect(page.getAllElByCss('mat-expansion-panel').count()).toBe(3);
 
     done();
