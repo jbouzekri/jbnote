@@ -2,13 +2,43 @@ import { CommonTools } from './common.po';
 import { browser } from 'protractor';
 
 export class NotesPage extends CommonTools {
-  async createNote(title: string, body: string) {
+  async goToNewNoteForm() {
     this.getElByCss('a[ng-reflect-router-link="notes,new"]').click();
     await this.waitToBePresent('app-note-form form mat-form-field:nth-child(1) input', 15);
-    this.fillField('app-note-form form mat-form-field:nth-child(1) input', title);
-    this.fillField('app-note-form form mat-form-field:nth-child(2) textarea', body);
-    this.getElByCss('app-note-form form button').click();
-    await this.waitToBePresent('app-note-list', 15);
+  }
+
+  getNoteTitleInputSelector() {
+    return 'app-note-form form mat-form-field:nth-child(1) input';
+  }
+
+  getNoteBodyTextareaSelector() {
+    return 'app-note-form form mat-form-field:nth-child(2) textarea';
+  }
+
+  getNoteSubmitSelector() {
+    return 'app-note-form form button';
+  }
+
+  async gotToPreviewFromNoteEdit() {
+    this.getElByCss('app-note-form mat-tab-group mat-tab-header .mat-tab-label-container ' +
+      '.mat-tab-list .mat-tab-labels div:nth-child(2)').click();
+    await this.waitToBeVisible('app-note-form mat-tab-body mat-expansion-panel', 8);
+  }
+
+  async gotToNoteEditFromPreview() {
+    this.getElByCss('app-note-form mat-tab-group mat-tab-header .mat-tab-label-container ' +
+      '.mat-tab-list .mat-tab-labels div:nth-child(1)').click();
+    await this.waitToBeVisible('app-note-form mat-tab-body mat-card form', 9);
+  }
+
+  async createNote(title: string, body: string, submit = true) {
+    await this.goToNewNoteForm();
+    this.fillField(this.getNoteTitleInputSelector(), title);
+    this.fillField(this.getNoteBodyTextareaSelector(), body);
+    if (submit) {
+      this.getElByCss(this.getNoteSubmitSelector()).click();
+      await this.waitToBePresent('app-note-list', 15);
+    }
   }
 
   async createLoremIpsumNote() {
