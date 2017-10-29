@@ -1,5 +1,5 @@
 import { InstallPage } from './install.po';
-import { hasClass } from './common.po';
+import { CommonTools, hasClass } from './common.po';
 import { browser } from 'protractor';
 
 describe('jbnote Install', () => {
@@ -140,7 +140,7 @@ describe('jbnote Install', () => {
   it('should redirect to notes with sync valid if form is valid with valid data', async (done) => {
     browser.waitForAngularEnabled(false);
 
-    const [ apiKey, authDomain, databaseURL, storageBucket, username, password ] = page.getFirebaseValidConf(true);
+    const [ apiKey, authDomain, databaseURL, storageBucket, username, password ] = CommonTools.getFirebaseValidConf(true);
 
     await page.goToConfigSyncStep();
 

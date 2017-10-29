@@ -74,7 +74,7 @@ export class NoteListComponent implements OnInit, OnDestroy {
     // Subscribe to the list observable
     this.subscription = this.createObservable()
       .subscribe((notes) => {
-        this.logger.info('Search results found', notes);
+        this.logger.debug('Search results found', notes);
         this.notes = notes;
       });
 

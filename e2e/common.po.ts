@@ -8,6 +8,25 @@ export function hasClass(element: ElementFinder, cls: string): promise.Promise<b
 }
 
 export class CommonTools {
+  public static getFirebaseValidConf(withAuth: boolean = true) {
+    const apiKey = process.env.JBNOTE_FB_API_KEY;
+    const authDomain = process.env.JBNOTE_FB_AUTH_DOMAIN;
+    const databaseURL = process.env.JBNOTE_FB_DATABASE_URL;
+    const storageBucket = process.env.JBNOTE_FB_STORAGE_BUCKET;
+    const username = process.env.JBNOTE_FB_USERNAME;
+    const password = process.env.JBNOTE_FB_PASSWORD;
+
+    if (!apiKey || !authDomain || !databaseURL || !storageBucket) {
+      throw Error('Missing firebase env variables for tests');
+    }
+
+    if (withAuth && (!username || !password)) {
+      throw Error('Missing firebase auth env variables for tests');
+    }
+
+    return [ apiKey, authDomain, databaseURL, storageBucket, username, password ];
+  }
+
   navigateTo(url: string = '/') {
     return browser.get(url);
   }
@@ -69,27 +88,9 @@ export class CommonTools {
     await this.waitToBeVisible('app-note-list', 1000);
   }
 
-  getFirebaseValidConf(withAuth: boolean = true) {
-    const apiKey = process.env.JBNOTE_FB_API_KEY;
-    const authDomain = process.env.JBNOTE_FB_AUTH_DOMAIN;
-    const databaseURL = process.env.JBNOTE_FB_DATABASE_URL;
-    const storageBucket = process.env.JBNOTE_FB_STORAGE_BUCKET;
-    const username = process.env.JBNOTE_FB_USERNAME;
-    const password = process.env.JBNOTE_FB_PASSWORD;
-
-    if (!apiKey || !authDomain || !databaseURL || !storageBucket) {
-      throw Error('Missing firebase env variables for tests');
-    }
-
-    if (withAuth && (!username || !password)) {
-      throw Error('Missing firebase auth env variables for tests');
-    }
-
-    return [ apiKey, authDomain, databaseURL, storageBucket, username, password ];
-  }
-
   async enableFirebaseSync(withAuth: boolean = true) {
-    const [ apiKey, authDomain, databaseURL, storageBucket, username, password ] = this.getFirebaseValidConf(withAuth);
+    this.navigateTo('/install');
+    const [ apiKey, authDomain, databaseURL, storageBucket, username, password ] = CommonTools.getFirebaseValidConf(withAuth);
 
     const firebaseConfig = {
       apiKey: apiKey,
@@ -108,8 +109,9 @@ export class CommonTools {
     }
 
     browser.executeScript('window.localStorage.setItem("app_sync_enabled", "1");');
-    browser.executeScript('window.localStorage.setItem("app_sync_config", "' + JSON.stringify(firebaseConfig) + '");');
+    browser.executeScript('window.localStorage.setItem("app_sync_config", \'' + JSON.stringify(firebaseConfig) + '\');');
     this.navigateTo('/notes');
+    await this.waitToBeVisible('app-note-list', 1000);
   }
 
   getElByCss(selector: string): ElementFinder {
