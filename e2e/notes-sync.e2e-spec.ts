@@ -4,7 +4,7 @@ import { browser } from 'protractor';
 import { Note } from '../src/app/notes/models/note.model';
 import { FirebaseClient } from './firebase.po';
 
-describe('jbnote Notes No Sync', () => {
+describe('jbnote Notes with Sync', () => {
   let page: NotesPage;
   let client: FirebaseClient;
 
@@ -32,24 +32,24 @@ describe('jbnote Notes No Sync', () => {
     setTimeout(async function() {
       await client.validate(function(notes: {[key: string]: Note}) {
         const remoteKeys = Object.keys(notes);
-        expect(Object.keys(notes).length).toBe(3);
-        expect(notes[remoteKeys[0]].title).toBe('title 0');
-        expect(notes[remoteKeys[0]].body).toBe('body 0');
-        expect(notes[remoteKeys[0]].createdAt).toBeGreaterThan(now);
-        expect(notes[remoteKeys[0]].updatedAt).toBeGreaterThan(now);
-        expect('deletedAt' in notes[remoteKeys[0]]).toBe(false);
+        expect<any>(Object.keys(notes).length).toBe(3);
+        expect<any>(notes[remoteKeys[0]].title).toBe('title 0');
+        expect<any>(notes[remoteKeys[0]].body).toBe('body 0');
+        expect<any>(notes[remoteKeys[0]].createdAt).toBeGreaterThan(now);
+        expect<any>(notes[remoteKeys[0]].updatedAt).toBeGreaterThan(now);
+        expect<any>('deletedAt' in notes[remoteKeys[0]]).toBe(false);
 
-        expect(notes[remoteKeys[1]].title).toBe('title 1');
-        expect(notes[remoteKeys[1]].body).toBe('body 1');
-        expect(notes[remoteKeys[1]].createdAt).toBeGreaterThan(now);
-        expect(notes[remoteKeys[1]].updatedAt).toBeGreaterThan(now);
-        expect('deletedAt' in notes[remoteKeys[1]]).toBe(false);
+        expect<any>(notes[remoteKeys[1]].title).toBe('title 1');
+        expect<any>(notes[remoteKeys[1]].body).toBe('body 1');
+        expect<any>(notes[remoteKeys[1]].createdAt).toBeGreaterThan(now);
+        expect<any>(notes[remoteKeys[1]].updatedAt).toBeGreaterThan(now);
+        expect<any>('deletedAt' in notes[remoteKeys[1]]).toBe(false);
 
-        expect(notes[remoteKeys[2]].title).toBe('title 2');
-        expect(notes[remoteKeys[2]].body).toBe('body 2');
-        expect(notes[remoteKeys[2]].createdAt).toBeGreaterThan(now);
-        expect(notes[remoteKeys[2]].updatedAt).toBeGreaterThan(now);
-        expect('deletedAt' in notes[remoteKeys[2]]).toBe(false);
+        expect<any>(notes[remoteKeys[2]].title).toBe('title 2');
+        expect<any>(notes[remoteKeys[2]].body).toBe('body 2');
+        expect<any>(notes[remoteKeys[2]].createdAt).toBeGreaterThan(now);
+        expect<any>(notes[remoteKeys[2]].updatedAt).toBeGreaterThan(now);
+        expect<any>('deletedAt' in notes[remoteKeys[2]]).toBe(false);
       });
       done();
     }, 4000);
@@ -85,27 +85,27 @@ describe('jbnote Notes No Sync', () => {
     setTimeout(async function() {
       await client.validate(function(notes: {[key: string]: Note}) {
         const remoteKeys = Object.keys(notes);
-        expect(Object.keys(notes).length).toBe(3);
-        expect(notes[remoteKeys[0]].title).toBe('title 4');
-        expect(notes[remoteKeys[0]].body).toBe('body 4');
-        expect(notes[remoteKeys[0]].createdAt).toBeGreaterThan(now);
-        expect(notes[remoteKeys[0]].createdAt).toBeLessThan(beforeUpdate);
-        expect(notes[remoteKeys[0]].updatedAt).toBeGreaterThan(now);
-        expect('deletedAt' in notes[remoteKeys[0]]).toBe(false);
+        expect<any>(Object.keys(notes).length).toBe(3);
+        expect<any>(notes[remoteKeys[0]].title).toBe('title 4');
+        expect<any>(notes[remoteKeys[0]].body).toBe('body 4');
+        expect<any>(notes[remoteKeys[0]].createdAt).toBeGreaterThan(now);
+        expect<any>(notes[remoteKeys[0]].createdAt).toBeLessThan(beforeUpdate);
+        expect<any>(notes[remoteKeys[0]].updatedAt).toBeGreaterThan(now);
+        expect<any>('deletedAt' in notes[remoteKeys[0]]).toBe(false);
 
-        expect(notes[remoteKeys[1]].title).toBe('title edited');
-        expect(notes[remoteKeys[1]].body).toBe('body edited');
-        expect(notes[remoteKeys[1]].createdAt).toBeGreaterThan(now);
-        expect(notes[remoteKeys[1]].createdAt).toBeLessThan(beforeUpdate);
-        expect(notes[remoteKeys[1]].updatedAt).toBeGreaterThan(beforeUpdate);
-        expect('deletedAt' in notes[remoteKeys[1]]).toBe(false);
+        expect<any>(notes[remoteKeys[1]].title).toBe('title edited');
+        expect<any>(notes[remoteKeys[1]].body).toBe('body edited');
+        expect<any>(notes[remoteKeys[1]].createdAt).toBeGreaterThan(now);
+        expect<any>(notes[remoteKeys[1]].createdAt).toBeLessThan(beforeUpdate);
+        expect<any>(notes[remoteKeys[1]].updatedAt).toBeGreaterThan(beforeUpdate);
+        expect<any>('deletedAt' in notes[remoteKeys[1]]).toBe(false);
 
-        expect(notes[remoteKeys[2]].title).toBe('title 6');
-        expect(notes[remoteKeys[2]].body).toBe('body 6');
-        expect(notes[remoteKeys[2]].createdAt).toBeGreaterThan(now);
-        expect(notes[remoteKeys[2]].createdAt).toBeLessThan(beforeUpdate);
-        expect(notes[remoteKeys[2]].updatedAt).toBeGreaterThan(now);
-        expect('deletedAt' in notes[remoteKeys[2]]).toBe(false);
+        expect<any>(notes[remoteKeys[2]].title).toBe('title 6');
+        expect<any>(notes[remoteKeys[2]].body).toBe('body 6');
+        expect<any>(notes[remoteKeys[2]].createdAt).toBeGreaterThan(now);
+        expect<any>(notes[remoteKeys[2]].createdAt).toBeLessThan(beforeUpdate);
+        expect<any>(notes[remoteKeys[2]].updatedAt).toBeGreaterThan(now);
+        expect<any>('deletedAt' in notes[remoteKeys[2]]).toBe(false);
       });
       done();
     }, 4000);
@@ -136,24 +136,24 @@ describe('jbnote Notes No Sync', () => {
     setTimeout(async function() {
       await client.validate(function(notes: {[key: string]: Note}) {
         const remoteKeys = Object.keys(notes);
-        expect(Object.keys(notes).length).toBe(3);
-        expect(notes[remoteKeys[0]].title).toBe('title 7');
-        expect(notes[remoteKeys[0]].body).toBe('body 7');
-        expect(notes[remoteKeys[0]].createdAt).toBeGreaterThan(now);
-        expect(notes[remoteKeys[0]].updatedAt).toBeGreaterThan(now);
-        expect('deletedAt' in notes[remoteKeys[0]]).toBe(false);
+        expect<any>(Object.keys(notes).length).toBe(3);
+        expect<any>(notes[remoteKeys[0]].title).toBe('title 7');
+        expect<any>(notes[remoteKeys[0]].body).toBe('body 7');
+        expect<any>(notes[remoteKeys[0]].createdAt).toBeGreaterThan(now);
+        expect<any>(notes[remoteKeys[0]].updatedAt).toBeGreaterThan(now);
+        expect<any>('deletedAt' in notes[remoteKeys[0]]).toBe(false);
 
-        expect(notes[remoteKeys[1]].title).toBe('title 8');
-        expect(notes[remoteKeys[1]].body).toBe('body 8');
-        expect(notes[remoteKeys[1]].createdAt).toBeGreaterThan(now);
-        expect(notes[remoteKeys[1]].updatedAt).toBeGreaterThan(now);
-        expect(notes[remoteKeys[1]].deletedAt).toBeGreaterThan(beforeRemoval);
+        expect<any>(notes[remoteKeys[1]].title).toBe('title 8');
+        expect<any>(notes[remoteKeys[1]].body).toBe('body 8');
+        expect<any>(notes[remoteKeys[1]].createdAt).toBeGreaterThan(now);
+        expect<any>(notes[remoteKeys[1]].updatedAt).toBeGreaterThan(now);
+        expect<any>(notes[remoteKeys[1]].deletedAt).toBeGreaterThan(beforeRemoval);
 
-        expect(notes[remoteKeys[2]].title).toBe('title 9');
-        expect(notes[remoteKeys[2]].body).toBe('body 9');
-        expect(notes[remoteKeys[2]].createdAt).toBeGreaterThan(now);
-        expect(notes[remoteKeys[2]].updatedAt).toBeGreaterThan(now);
-        expect('deletedAt' in notes[remoteKeys[2]]).toBe(false);
+        expect<any>(notes[remoteKeys[2]].title).toBe('title 9');
+        expect<any>(notes[remoteKeys[2]].body).toBe('body 9');
+        expect<any>(notes[remoteKeys[2]].createdAt).toBeGreaterThan(now);
+        expect<any>(notes[remoteKeys[2]].updatedAt).toBeGreaterThan(now);
+        expect<any>('deletedAt' in notes[remoteKeys[2]]).toBe(false);
       });
       done();
     }, 4000);
@@ -168,7 +168,7 @@ describe('jbnote Notes No Sync', () => {
     setTimeout(async function() {
       page.fillField('#search-box', 'title');
       await page.waitToBePresent('mat-accordion mat-expansion-panel:nth-child(2)', 10);
-      expect(page.getAllElByCss('mat-expansion-panel').count()).toBe(2);
+      expect<any>(page.getAllElByCss('mat-expansion-panel').count()).toBe(2);
       done();
     }, 4000);
   });
